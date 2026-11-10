@@ -1,0 +1,1715 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#F4F3F8">
+<title>Your Friend You</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600&family=Lexend:wght@300;400;500;600&display=swap">
+<style>
+/* Layout: one phone-width app column, centered on larger screens, fixed bottom tab bar; sheets slide up, guided flows open full screen. */
+:root{
+  --bg:#F4F3F8; --surface:#FFFFFF; --ink:#37354A; --muted:#6C6A82; --line:#E3E1EC;
+  --lav:#E6E0F7; --lav-ink:#5A4C97;
+  --sage:#DDEEE4; --sage-ink:#3D6C55;
+  --peach:#FBE4D8; --peach-ink:#8F5338;
+  --sky:#DCEAF6; --sky-ink:#3B638B;
+  --butter:#F7EFCF; --butter-ink:#6F5D1B;
+  --rose:#F6DFE7; --rose-ink:#8A4862;
+  --focus:#8C7BD6; --scrim:rgba(40,38,58,.38);
+  --shadow:0 1px 2px rgba(55,53,74,.05),0 6px 18px rgba(55,53,74,.06);
+  --f-display:"Fredoka","Lexend",system-ui,sans-serif;
+  --f-body:"Lexend",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --r-lg:22px; --r-md:16px; --z:1;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#1C1B24; --surface:#26252F; --ink:#ECEAF4; --muted:#A8A6BA; --line:#383747;
+  --lav:#363052; --lav-ink:#CFC5F3; --sage:#2A3F33; --sage-ink:#B5DBC4;
+  --peach:#463128; --peach-ink:#F2C6B0; --sky:#2A3A4C; --sky-ink:#B8D3EE;
+  --butter:#433C22; --butter-ink:#EBDDA2; --rose:#462E39; --rose-ink:#F0BDD0;
+  --focus:#B3A6EE; --scrim:rgba(0,0,0,.6); --shadow:0 1px 2px rgba(0,0,0,.25); color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#1C1B24; --surface:#26252F; --ink:#ECEAF4; --muted:#A8A6BA; --line:#383747;
+  --lav:#363052; --lav-ink:#CFC5F3; --sage:#2A3F33; --sage-ink:#B5DBC4;
+  --peach:#463128; --peach-ink:#F2C6B0; --sky:#2A3A4C; --sky-ink:#B8D3EE;
+  --butter:#433C22; --butter-ink:#EBDDA2; --rose:#462E39; --rose-ink:#F0BDD0;
+  --focus:#B3A6EE; --scrim:rgba(0,0,0,.6); --shadow:0 1px 2px rgba(0,0,0,.25); color-scheme:dark;
+}
+:root[data-contrast="high"]{ --muted:var(--ink); --line:var(--muted); --shadow:0 0 0 1.5px var(--ink) }
+:root[data-low]{ --lav:var(--surface); --sage:var(--surface); --peach:var(--surface); --sky:var(--surface); --butter:var(--surface); --rose:var(--surface);
+  --lav-ink:var(--muted); --sage-ink:var(--muted); --peach-ink:var(--muted); --sky-ink:var(--muted); --butter-ink:var(--muted); --rose-ink:var(--muted); --focus:var(--muted) }
+:root[data-low] *{transition:none!important;animation:none!important}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{height:100%}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.5}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer;border:0;background:none;padding:0}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--focus);outline-offset:2px;border-radius:10px}
+h1,h2,h3{font-family:var(--f-display);font-weight:600;margin:0;text-wrap:balance;letter-spacing:.005em}
+p{margin:0}
+.zoom{zoom:var(--z)}
+
+.app{max-width:480px;margin:0 auto;min-height:100%;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
+  padding-block:16px calc(110px + env(safe-area-inset-bottom,0px));}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-block:4px 18px}
+.brand{display:flex;align-items:center;gap:10px;font-family:var(--f-display);font-weight:600;font-size:17px;text-decoration:none}
+.brand-mark{width:34px;height:34px;border-radius:12px;background:var(--lav);display:grid;place-items:center}
+.me-btn{width:44px;height:44px;border-radius:14px;background:var(--surface);box-shadow:var(--shadow);display:grid;place-items:center;font-size:22px;text-decoration:none}
+
+.screen{display:flex;flex-direction:column;gap:22px}
+.head{display:flex;flex-direction:column;gap:6px}
+.head h1{font-size:28px;line-height:1.15}
+.sub{color:var(--muted);font-size:15px}
+.label{font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:500}
+.section{display:flex;flex-direction:column;gap:12px}
+.between{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.back{display:inline-flex;align-items:center;gap:6px;color:var(--muted);font-size:15px;align-self:flex-start;padding:6px 0;text-decoration:none}
+.panel{background:var(--surface);border-radius:var(--r-lg);padding:18px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:14px}
+.panel h2{font-size:19px}
+.note{font-size:14px;color:var(--muted);background:var(--surface);border-radius:var(--r-md);padding:12px 14px;display:flex;gap:10px;align-items:flex-start}
+.empty{text-align:center;color:var(--muted);font-size:15px;padding:24px 12px;background:var(--surface);border-radius:var(--r-md);grid-column:1/-1;list-style:none}
+
+.c-lav{background:var(--lav);color:var(--lav-ink)} .c-sage{background:var(--sage);color:var(--sage-ink)}
+.c-peach{background:var(--peach);color:var(--peach-ink)} .c-sky{background:var(--sky);color:var(--sky-ink)}
+.c-rose{background:var(--rose);color:var(--rose-ink)} .c-butter{background:var(--butter);color:var(--butter-ink)}
+
+.btn{padding:12px 18px;border-radius:14px;background:var(--lav);color:var(--lav-ink);font-weight:500;display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:46px;text-decoration:none;text-align:center}
+.btn.ghost{background:var(--surface);color:var(--ink);box-shadow:inset 0 0 0 1.5px var(--line)}
+.btn.solid{background:var(--lav-ink);color:var(--surface)}
+.btn.warn{background:var(--rose);color:var(--rose-ink)}
+.btn.block{width:100%}
+.btn.sm{padding:8px 12px;min-height:36px;font-size:14px;border-radius:11px}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.btns{display:flex;gap:10px;flex-wrap:wrap}
+.btns .btn{flex:1}
+
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{padding:9px 14px;border-radius:999px;background:var(--surface);box-shadow:inset 0 0 0 1.5px var(--line);font-size:15px;display:inline-flex;gap:8px;align-items:center;flex:none}
+.panel .chip{background:var(--bg);box-shadow:none}
+.chip[aria-pressed="true"]{background:var(--lav)!important;box-shadow:inset 0 0 0 1.5px var(--lav-ink)!important;color:var(--lav-ink);font-weight:500}
+.dot{width:10px;height:10px;border-radius:50%;flex:none}
+.tag{font-size:12px;padding:3px 9px;border-radius:999px;font-weight:500;white-space:nowrap}
+.tags{display:flex;flex-wrap:wrap;gap:6px}
+.seg{display:flex;gap:6px;background:var(--surface);padding:5px;border-radius:999px;box-shadow:var(--shadow)}
+.seg button{flex:1;padding:9px 6px;border-radius:999px;font-size:14px;color:var(--muted)}
+.seg button[aria-pressed="true"],.seg button[aria-selected="true"]{background:var(--sky);color:var(--sky-ink);font-weight:500}
+.sheet .seg,.full .seg{box-shadow:inset 0 0 0 1.5px var(--line)}
+
+.switch{display:flex;align-items:center;gap:14px;padding:14px 16px;background:var(--surface);border-radius:var(--r-md);width:100%;text-align:left}
+.switch .t{flex:1;min-width:0;display:flex;flex-direction:column}
+.switch .t small{color:var(--muted);font-size:13px}
+.tog{width:48px;height:28px;border-radius:999px;background:var(--line);position:relative;flex:none;transition:background .15s}
+.tog::after{content:"";position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:var(--surface);box-shadow:0 1px 2px rgba(0,0,0,.2);transition:left .15s}
+[aria-checked="true"] .tog{background:var(--lav-ink)}
+[aria-checked="true"] .tog::after{left:23px}
+
+.field{display:flex;flex-direction:column;gap:6px}
+.field label,.field .flabel{font-size:14px;font-weight:500}
+.field input,.field select,.field textarea{padding:12px 14px;border-radius:12px;border:1.5px solid var(--line);background:var(--surface);width:100%}
+.field textarea{min-height:120px;resize:vertical}
+.field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--focus)}
+.field small{color:var(--muted);font-size:13px}
+.err{color:var(--rose-ink);font-size:14px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.emoji-pick{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}
+.emoji-pick button{font-size:24px;padding:8px 0;border-radius:12px;background:var(--surface)}
+.emoji-pick button[aria-pressed="true"]{box-shadow:inset 0 0 0 2px var(--lav-ink);background:var(--lav)}
+input[type=range]{width:100%;accent-color:var(--lav-ink)}
+
+/* Home */
+.greet h1{font-size:30px}
+.next{display:flex;flex-direction:column;gap:12px;padding:16px;border-radius:var(--r-lg);background:var(--sage);color:var(--sage-ink)}
+.next .row{display:flex;align-items:center;gap:14px}
+.pict{width:56px;height:56px;border-radius:var(--r-md);background:var(--surface);display:grid;place-items:center;font-size:30px;flex:none}
+.next .txt{display:flex;flex-direction:column;gap:2px;min-width:0;flex:1}
+.next strong{font-family:var(--f-display);font-size:19px;font-weight:600;color:var(--ink)}
+.next small{font-size:14px}
+.next .btns .btn{background:var(--surface);color:var(--sage-ink)}
+.areas{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.area{border-radius:var(--r-lg);padding:16px;display:flex;flex-direction:column;gap:10px;min-height:128px;justify-content:space-between;text-decoration:none}
+.area .ic{width:44px;height:44px;border-radius:14px;background:var(--surface);display:grid;place-items:center;flex:none}
+.area .ic svg{width:24px;height:24px}
+.area b{font-family:var(--f-display);font-weight:600;font-size:18px;display:block;color:var(--ink)}
+.area span{font-size:13px;line-height:1.35}
+.area.wide{grid-column:1/-1;flex-direction:row;align-items:center;min-height:0}
+.pause{display:flex;align-items:center;justify-content:center;gap:10px;padding:16px;border-radius:var(--r-lg);border:2px dashed var(--line);color:var(--muted);font-weight:500;width:100%}
+
+/* Communication */
+.strip{background:var(--surface);border-radius:var(--r-lg);box-shadow:var(--shadow);padding:12px;display:flex;flex-direction:column;gap:10px;position:sticky;top:env(safe-area-inset-top,0px);z-index:3}
+.strip-words{display:flex;flex-wrap:wrap;gap:6px;min-height:48px;align-items:center;padding:2px 4px}
+.strip-words .ph{color:var(--muted);font-size:15px}
+.word{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:12px;background:var(--bg);font-weight:500;font-size:15px}
+.word img{width:22px;height:22px;border-radius:6px;object-fit:cover}
+.meaning{display:flex;gap:10px;align-items:center;font-size:14px;background:var(--bg);border-radius:12px;padding:8px 10px}
+.meaning .me{font-size:24px}
+.meaning b{font-weight:600}
+.strip-actions{display:grid;grid-template-columns:auto auto auto 1fr;gap:8px}
+.cats{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none}
+.cats::-webkit-scrollbar{display:none}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.card-wrap{position:relative}
+.card{border-radius:var(--r-md);padding:18px 6px 12px;display:flex;flex-direction:column;align-items:center;gap:8px;font-size:14px;font-weight:500;text-align:center;color:var(--ink);min-height:116px;justify-content:center;width:100%;line-height:1.25}
+.card .e{font-size:38px;line-height:1}
+.card img{width:52px;height:52px;object-fit:cover;border-radius:12px}
+.mini{position:absolute;top:4px;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;color:var(--muted);font-size:15px;line-height:1;font-weight:600}
+.mini.info{left:4px;font-family:Georgia,serif;font-style:italic;background:var(--surface);opacity:.85}
+.mini.fav{right:4px;font-size:17px}
+.mini.fav[aria-pressed="true"]{color:var(--butter-ink)}
+.add-card{border:2px dashed var(--line);background:transparent;color:var(--muted)}
+
+/* Routine */
+.steps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.step{background:var(--surface);border-radius:var(--r-md);box-shadow:var(--shadow);overflow:hidden}
+.step-main{display:flex;align-items:center;gap:12px;padding:10px 12px;width:100%;text-align:left}
+.step .e{width:46px;height:46px;border-radius:12px;background:var(--bg);display:grid;place-items:center;font-size:24px;flex:none}
+.step .t{flex:1;min-width:0;display:flex;flex-direction:column}
+.step .t strong{font-weight:500}
+.step .t small{color:var(--muted);font-size:13px;font-variant-numeric:tabular-nums}
+.step.st-done .t strong{text-decoration:line-through;color:var(--muted)}
+.step.st-skip{opacity:.65}
+.step.now{box-shadow:inset 0 0 0 2px var(--sky-ink),var(--shadow)}
+.step-actions{display:flex;gap:6px;padding:0 12px 12px 70px;flex-wrap:wrap}
+.step-actions button{padding:8px 12px;border-radius:10px;font-size:13px;font-weight:500;background:var(--bg)}
+.step-actions .ok{background:var(--sage);color:var(--sage-ink)}
+.step-actions .go{background:var(--sky);color:var(--sky-ink)}
+.tools{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.tool{border-radius:var(--r-lg);padding:16px;text-align:left;display:flex;flex-direction:column;gap:8px}
+.tool b{font-family:var(--f-display);font-size:17px;font-weight:600;color:var(--ink)}
+.tool span{font-size:13px}
+.tool .big{font-size:26px}
+
+/* Diary */
+.entries,.list{display:flex;flex-direction:column;gap:10px}
+.entry{background:var(--surface);border-radius:var(--r-md);padding:14px 16px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:8px;text-align:left;width:100%}
+.entry header{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:13px;color:var(--muted);flex-wrap:wrap}
+.entry p{font-size:15px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.strategy{font-size:14px;color:var(--sage-ink);background:var(--sage);padding:8px 10px;border-radius:10px}
+.insight{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.insight div{border-radius:var(--r-md);padding:12px 14px;display:flex;flex-direction:column;gap:2px}
+.insight b{font-family:var(--f-display);font-size:18px;color:var(--ink)}
+.insight span{font-size:13px}
+
+/* Wellbeing */
+.quick3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.quick3 button{border-radius:var(--r-md);padding:14px 8px;display:flex;flex-direction:column;align-items:center;gap:6px;font-weight:500;font-size:14px;text-align:center}
+.quick3 .big{font-size:28px}
+.snd{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;align-items:center;background:var(--surface);border-radius:var(--r-md);padding:12px 14px;box-shadow:var(--shadow)}
+.snd .play{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;font-size:16px;grid-row:span 2}
+.snd .play[aria-pressed="true"]{box-shadow:inset 0 0 0 3px currentColor}
+.snd .nm{display:flex;justify-content:space-between;gap:8px;align-items:baseline;flex-wrap:wrap}
+.snd .nm b{font-weight:600}
+.snd .nm small{color:var(--muted);font-size:13px}
+.player{position:sticky;top:env(safe-area-inset-top,0px);z-index:3;background:var(--lav);color:var(--lav-ink);border-radius:var(--r-lg);padding:12px 14px;display:flex;align-items:center;gap:12px}
+.player .t{flex:1;min-width:0;font-size:14px}
+.player b{display:block;color:var(--ink);font-weight:600;font-size:15px}
+
+/* Professionals */
+.search{display:flex;align-items:center;gap:10px;background:var(--surface);border-radius:14px;padding:0 14px;box-shadow:var(--shadow)}
+.search input{flex:1;border:0;background:none;padding:13px 0;min-width:0}
+.search input:focus{outline:none}
+.search:focus-within{box-shadow:0 0 0 3px var(--focus)}
+.pro{background:var(--surface);border-radius:var(--r-lg);padding:16px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:12px}
+.pro .top{display:flex;gap:12px;align-items:center}
+.avatar{width:52px;height:52px;border-radius:16px;display:grid;place-items:center;font-family:var(--f-display);font-weight:600;font-size:19px;flex:none}
+.pro .who{flex:1;min-width:0}
+.pro .who b{font-family:var(--f-display);font-weight:600;font-size:18px;display:block}
+.pro .who small{color:var(--muted);font-size:14px;display:block}
+.pro .adapt{font-size:14px;color:var(--muted)}
+.favbtn{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;color:var(--muted);font-size:20px;flex:none}
+.favbtn[aria-pressed="true"]{color:var(--butter-ink)}
+.slots{display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end}
+.appt{background:var(--surface);border-radius:var(--r-md);padding:14px 16px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:8px}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;font-size:15px;margin:0}
+.kv dt{color:var(--muted)} .kv dd{margin:0;min-width:0}
+ul.plain{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px}
+
+/* Profile */
+.profile-card{display:flex;align-items:center;gap:14px;background:var(--surface);border-radius:var(--r-lg);padding:18px;box-shadow:var(--shadow)}
+.profile-card .av{width:60px;height:60px;border-radius:18px;font-size:32px;display:grid;place-items:center;background:var(--lav);flex:none}
+.setting{display:flex;align-items:center;gap:14px;padding:14px 16px;background:var(--surface);border-radius:var(--r-md);box-shadow:var(--shadow);text-align:left;width:100%}
+.setting .ic{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;flex:none;font-size:17px;font-weight:600}
+.setting .t{flex:1;min-width:0;display:flex;flex-direction:column}
+.setting .t small{color:var(--muted);font-size:13px}
+details.guide{background:var(--surface);border-radius:var(--r-md);padding:4px 16px}
+details.guide summary{padding:12px 0;font-weight:500;cursor:pointer}
+details.guide ol{margin:0 0 14px;padding-left:22px;display:flex;flex-direction:column;gap:6px;font-size:15px}
+
+/* Overlays */
+.sheet-bg{position:fixed;inset:0;background:var(--scrim);z-index:30;display:flex;align-items:flex-end;justify-content:center}
+.sheet{background:var(--bg);width:100%;max-width:480px;border-radius:24px 24px 0 0;max-height:92%;overflow-y:auto;
+  padding:20px max(16px,env(safe-area-inset-right,0px)) calc(20px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
+.sheet-in{display:flex;flex-direction:column;gap:16px}
+.sheet h2{font-size:22px}
+.full{position:fixed;inset:0;z-index:25;background:var(--bg);overflow-y:auto;
+  padding:calc(18px + env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) calc(20px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
+.full-in{max-width:520px;margin:0 auto;min-height:100%;display:flex;flex-direction:column;gap:18px}
+.full-in h2{font-size:22px}
+.onb{z-index:50}
+.prog{display:flex;gap:6px}
+.prog i{flex:1;height:6px;border-radius:6px;background:var(--line)}
+.prog i.on{background:var(--lav-ink)}
+.stepcount{font-size:14px;color:var(--muted);font-variant-numeric:tabular-nums}
+.guide-card{flex:1;border-radius:28px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center;padding:24px 16px;min-height:280px}
+.guide-card .big-e{font-size:88px;line-height:1}
+.guide-card b{font-family:var(--f-display);font-size:28px;font-weight:600;color:var(--ink);line-height:1.2}
+.guide-card p{font-size:16px;max-width:30ch}
+.show-text{flex:1;display:flex;flex-wrap:wrap;align-content:center;justify-content:center;gap:16px;text-align:center;padding:12px}
+.show-text span{display:flex;flex-direction:column;align-items:center;gap:6px;font-family:var(--f-display);font-size:30px;font-weight:600;line-height:1.15}
+.show-text span i{font-style:normal;font-size:56px}
+.show-text img{width:72px;height:72px;border-radius:16px;object-fit:cover}
+.ft-big{flex:1;display:grid;grid-template-rows:1fr auto 1fr;gap:12px;min-height:420px}
+.ft-panel{border-radius:28px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;text-align:center;padding:16px}
+.ft-panel small{font-size:14px;letter-spacing:.08em;text-transform:uppercase;font-weight:600}
+.ft-panel .big-e{font-size:72px;line-height:1}
+.ft-panel b{font-family:var(--f-display);font-size:26px;font-weight:600;color:var(--ink)}
+.ft-arrow{text-align:center;color:var(--muted);font-size:22px}
+.choice-grid{flex:1;display:grid;grid-template-columns:1fr 1fr;gap:12px;align-content:center}
+.choice{border-radius:28px;padding:28px 12px;display:flex;flex-direction:column;align-items:center;gap:12px;font-family:var(--f-display);font-size:22px;font-weight:600;color:var(--ink)}
+.choice .big-e{font-size:64px;line-height:1}
+.choice[aria-pressed="true"]{box-shadow:inset 0 0 0 4px var(--lav-ink)}
+.orb-wrap{flex:1;display:grid;place-items:center;min-height:300px}
+.orb{width:220px;height:220px;border-radius:50%;background:radial-gradient(circle at 40% 35%,var(--sky),var(--lav));display:grid;place-items:center;text-align:center;color:var(--lav-ink);transform:scale(.6);transition-property:transform;transition-timing-function:ease-in-out}
+.orb b{font-family:var(--f-display);font-size:26px;display:block;color:var(--ink)}
+.orb span{font-size:32px;font-variant-numeric:tabular-nums}
+.timer-ring{width:240px;height:240px;border-radius:50%;display:grid;place-items:center;margin:0 auto;max-width:100%}
+.timer-ring div{width:190px;height:190px;border-radius:50%;background:var(--bg);display:grid;place-items:center;font-family:var(--f-display);font-size:44px;font-variant-numeric:tabular-nums}
+.welcome-art{display:flex;justify-content:center;gap:10px;padding:26px 0 6px}
+.welcome-art span{width:64px;height:64px;border-radius:20px;display:grid;place-items:center;font-size:30px}
+
+/* Tab bar */
+.tabbar{position:fixed;left:0;right:0;bottom:0;background:var(--surface);border-top:1px solid var(--line);
+  padding:8px max(8px,env(safe-area-inset-right,0px)) calc(8px + env(safe-area-inset-bottom,0px)) max(8px,env(safe-area-inset-left,0px));z-index:5}
+.tabbar nav{max-width:480px;margin:0 auto;display:grid;grid-auto-columns:1fr;grid-auto-flow:column;gap:4px}
+.tabbar a{display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 2px;border-radius:14px;color:var(--muted);text-decoration:none;font-size:11.5px;min-width:0;text-align:center;line-height:1.2}
+.tabbar a svg{width:24px;height:24px}
+.tabbar a[aria-current="page"]{color:var(--lav-ink);background:var(--lav);font-weight:500}
+
+.toast{position:fixed;left:50%;bottom:calc(100px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:12px 18px;border-radius:14px;font-size:14px;max-width:calc(100% - 32px);width:max-content;text-align:center;z-index:60}
+
+:root[data-motion="reduce"] *{transition:none!important;animation:none!important}
+@media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
+@media (max-width:360px){.cards{grid-template-columns:repeat(2,1fr)}.quick3{grid-template-columns:1fr}}
+.toolrow{display:flex;flex-wrap:wrap;gap:8px}
+.lowbadge{font-size:12px;padding:4px 10px;border-radius:999px;background:var(--surface);box-shadow:var(--shadow);color:var(--muted)}
+.notif{background:var(--surface);border-radius:var(--r-md);box-shadow:var(--shadow);padding:14px 16px;display:flex;gap:12px;align-items:flex-start}
+.notif .e{font-size:26px}
+.notif small{display:block;color:var(--muted);font-size:12px}
+.plan-sit{display:flex;flex-direction:column;gap:10px}
+.plan-sit button{border-radius:var(--r-md);padding:18px 16px;text-align:left;font-size:18px;font-weight:500;background:var(--surface);box-shadow:var(--shadow)}
+.plan-big{border-radius:var(--r-lg);padding:22px;display:flex;flex-direction:column;gap:10px}
+.plan-big b{font-family:var(--f-display);font-size:24px;line-height:1.25}
+.row-edit{display:flex;flex-direction:column;gap:8px;padding:12px;border-radius:var(--r-md);box-shadow:inset 0 0 0 1.5px var(--line)}
+.manual-sec{display:flex;flex-direction:column;gap:6px;padding:16px;border-radius:var(--r-md);background:var(--surface);box-shadow:var(--shadow)}
+.manual-sec p{white-space:pre-wrap}
+</style>
+</head>
+<body>
+
+<div class="app">
+  <div class="topbar zoom">
+    <a class="brand" href="#inicio">
+      <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20"><circle cx="9" cy="12" r="6" fill="var(--lav-ink)" opacity=".55"/><circle cx="15" cy="12" r="6" fill="var(--sky-ink)" opacity=".45"/></svg></span>
+      Your Friend You
+    </a>
+    <a class="me-btn" href="#perfil" id="me-btn" aria-label="Perfil">🌱</a>
+  </div>
+  <main id="view" class="zoom"></main>
+</div>
+
+<div class="tabbar"><nav id="nav" class="zoom" aria-label="Navegação principal"></nav></div>
+<div class="full" id="full" hidden role="dialog" aria-modal="true"></div>
+<div class="sheet-bg" id="sheet-bg" hidden><div class="sheet zoom" id="sheet" role="dialog" aria-modal="true"></div></div>
+<div class="full onb" id="onb" hidden role="dialog" aria-modal="true" aria-label="Boas-vindas"></div>
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+<script>
+(function(){
+"use strict";
+/* ================= utilidades ================= */
+const $ = s => document.querySelector(s);
+const esc = s => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+function load(k, d){ try{ const v = localStorage.getItem("yfy:"+k); return v ? JSON.parse(v) : d; }catch(e){ return d; } }
+function save(k, v){ try{ localStorage.setItem("yfy:"+k, JSON.stringify(v)); }catch(e){} }
+let tt;
+function toast(m){ const t = $("#toast"); t.textContent = m; t.hidden = false; clearTimeout(tt); tt = setTimeout(() => t.hidden = true, 2800); }
+const hour = new Date().getHours();
+const pad = n => String(n).padStart(2,"0");
+function fmtDate(iso){ const d = new Date(iso), now = new Date(); const diff = Math.round((new Date(now.toDateString()) - new Date(d.toDateString()))/864e5);
+  const dia = diff === 0 ? "Hoje" : diff === 1 ? "Ontem" : d.toLocaleDateString("pt-BR",{weekday:"long",day:"numeric",month:"short"}); return dia + " · " + pad(d.getHours())+":"+pad(d.getMinutes()); }
+function agoAt(days, h, m){ const d = new Date(); d.setDate(d.getDate()-days); d.setHours(h, m, 0, 0); return d.toISOString(); }
+
+/* ================= estado ================= */
+const DEF = {
+  profile:{name:"", avatar:"🌱", email:"", onboarded:false, logged:true},
+  prefs:{z:1, theme:"auto", contrast:false, motion:false, rate:0.95, low:false},
+  modules:{rot:true, com:true, dia:true, aut:true, bem:true, pro:true},
+  notif:{rotina:true, diario:false, diarioHora:"21:00", consultas:true, silencioDe:"22:00", silencioAte:"07:00"},
+  privacy:{homePreview:false, lockDiary:false},
+  mood:null
+};
+let S = Object.assign({}, DEF, load("state", {}));
+["profile","prefs","modules","notif","privacy"].forEach(k => S[k] = Object.assign({}, DEF[k], S[k] || {}));
+const persist = () => save("state", S);
+
+function applyPrefs(){
+  const r = document.documentElement;
+  r.style.setProperty("--z", S.prefs.z);
+  if(S.prefs.theme === "auto") r.removeAttribute("data-theme"); else r.setAttribute("data-theme", S.prefs.theme);
+  if(S.prefs.contrast) r.setAttribute("data-contrast","high"); else r.removeAttribute("data-contrast");
+  if(S.prefs.motion) r.setAttribute("data-motion","reduce"); else r.removeAttribute("data-motion");
+  if(S.prefs.low) r.setAttribute("data-low",""); else r.removeAttribute("data-low");
+  $("#me-btn").textContent = S.profile.avatar || "🌱";
+}
+
+/* ================= voz ================= */
+function speak(text){
+  try{
+    if(!("speechSynthesis" in window)){ toast("Este navegador não tem voz disponível."); return; }
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text); u.lang = "pt-BR"; u.rate = S.prefs.rate;
+    const vs = speechSynthesis.getVoices().filter(x => /^pt/i.test(x.lang));
+    if(vs.length) u.voice = vs.find(x => /BR/i.test(x.lang)) || vs[0];
+    speechSynthesis.speak(u);
+  }catch(e){ toast("Não foi possível reproduzir a voz aqui."); }
+}
+
+/* ================= ícones ================= */
+const IC = {
+  inicio:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M4 11l8-6 8 6v8a1 1 0 0 1-1 1h-4v-5h-6v5H5a1 1 0 0 1-1-1z"/></svg>',
+  com:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M4 5h16v11H9l-5 4z"/></svg>',
+  rot:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="4" y="5" width="16" height="15" rx="3"/><path d="M4 10h16M9 3v4M15 3v4"/></svg>',
+  dia:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 4h10a2 2 0 0 1 2 2v14H8a2 2 0 0 1-2-2z"/><path d="M6 18a2 2 0 0 1 2-2h10M10 8h5"/></svg>',
+  bem:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M9 18V6l10-2v12"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="16.5" cy="16" r="2.5"/></svg>',
+  pro:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c1-4 4-6 7-6s6 2 7 6"/></svg>',
+  aut:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/><path d="M8.5 12h2l1-2 1.5 4 1-2h1.5"/></svg>',
+  perfil:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6l1.4 1.4M17 17l1.4 1.4M5.6 18.4L7 17M17 7l1.4-1.4"/></svg>',
+  speak:'<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10v4h4l5 4V6L8 10z"/><path d="M16 9a4 4 0 0 1 0 6M18.5 6.5a7.5 7.5 0 0 1 0 11"/></svg>',
+  lock:'<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" style="flex:none;margin-top:2px"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>'
+};
+const MODS = [
+  {k:"rot", hash:"rotina", name:"Organização", tn:"Organizar", desc:"Tarefas, cuidados e lembretes", c:"c-sky", tab:true},
+  {k:"com", hash:"comunicacao", name:"Comunicação", tn:"Comunicar", desc:"Cards, voz e painéis", c:"c-lav", tab:true},
+  {k:"dia", hash:"diario", name:"Meu espaço", desc:"Diário e manual pessoal", c:"c-peach", tab:true},
+  {k:"aut", hash:"autorregulacao", name:"Autorregulação", desc:"Plano de apoio e estratégias", c:"c-rose", tab:false},
+  {k:"bem", hash:"bem-estar", name:"Bem-estar sensorial", desc:"Sons e ambientes calmos", c:"c-sage", tab:false},
+  {k:"pro", hash:"profissionais", name:"Rede de apoio", desc:"Profissionais e consultas", c:"c-butter", tab:false}
+];
+
+/* ================= navegação ================= */
+const MODOF = {comunicacao:"com", rotina:"rot", diario:"dia", autorregulacao:"aut", "bem-estar":"bem", profissionais:"pro"};
+let ROUTES = {};
+let current = "inicio";
+function route(){
+  let v = (location.hash || "").slice(1);
+  if(!ROUTES[v] || (MODOF[v] && !S.modules[MODOF[v]])) v = "inicio";
+  const changed = v !== current; current = v;
+  renderNav(); ROUTES[v]();
+  if(changed) window.scrollTo(0,0);
+}
+function rerender(){ const y = window.scrollY; renderNav(); ROUTES[current](); window.scrollTo(0,y); }
+function renderNav(){
+  const items = [{h:"inicio",n:"Início",i:IC.inicio}];
+  MODS.filter(m => m.tab && S.modules[m.k]).forEach(m => items.push({h:m.hash, n:m.tn || m.name, i:IC[m.k]}));
+  items.push({h:"perfil",n:"Perfil",i:IC.perfil});
+  $("#nav").innerHTML = items.map(t => `<a href="#${t.h}" ${t.h===current?'aria-current="page"':''}>${t.i}${t.n}</a>`).join("");
+}
+window.addEventListener("hashchange", route);
+
+/* ================= overlays ================= */
+let sheetClose = null;
+function openSheet(html, onClose){ $("#sheet").innerHTML = `<div class="sheet-in">${html}</div>`; $("#sheet").dataset.kind = ""; $("#sheet-bg").hidden = false; $("#sheet").scrollTop = 0; sheetClose = onClose || null; }
+function closeSheet(){ $("#sheet-bg").hidden = true; $("#sheet").innerHTML = ""; if(sheetClose){ const c = sheetClose; sheetClose = null; c(); } }
+let fullClose = null;
+function openFull(html, onClose){ $("#full").innerHTML = `<div class="full-in zoom">${html}</div>`; $("#full").hidden = false; $("#full").scrollTop = 0; fullClose = onClose || null; }
+function closeFull(){ $("#full").hidden = true; $("#full").innerHTML = ""; stopBreath(); stopTimer(); if(fullClose){ const c = fullClose; fullClose = null; c(); } }
+$("#sheet-bg").addEventListener("click", e => { if(e.target.id === "sheet-bg") closeSheet(); });
+document.addEventListener("keydown", e => { if(e.key !== "Escape") return; if(!$("#sheet-bg").hidden) closeSheet(); else if(!$("#full").hidden) closeFull(); });
+
+/* ================= ações (delegação) ================= */
+const A = {}, TOGS = {};
+document.addEventListener("click", e => {
+  const el = e.target.closest("[data-a]"); if(!el || el.disabled) return;
+  const fn = A[el.dataset.a]; if(fn){ e.preventDefault(); fn(el, e); }
+});
+A.closeSheet = () => closeSheet();
+A.closeFull = () => closeFull();
+A.go = el => { closeSheet(); closeFull(); location.hash = el.dataset.id; };
+A.say = el => speak(el.dataset.id);
+A.tog = el => { const on = el.getAttribute("aria-checked") !== "true"; el.setAttribute("aria-checked", on); if(TOGS[el.dataset.id]) TOGS[el.dataset.id](on, el); };
+
+function toggleHTML(id, on, title, sub){
+  return `<button class="switch" role="switch" aria-checked="${!!on}" data-a="tog" data-id="${id}"><span class="t"><b>${title}</b>${sub?`<small>${sub}</small>`:""}</span><span class="tog" aria-hidden="true"></span></button>`;
+}
+const isOn = id => { const b = document.querySelector(`[data-a="tog"][data-id="${id}"]`); return !!b && b.getAttribute("aria-checked") === "true"; };
+const EMOJIS = ["😊","😢","😠","😴","🤗","🙋","💧","🍎","🍞","🚻","🛏️","🎧","📚","🎨","🎮","🚶","🧸","🏠","🌳","🛁","💊","🪥","👕","🎒","🧹","🐶","🚌","💻","☕","🌱"];
+function pickerHTML(id, sel){ return `<div class="emoji-pick" id="${id}">${EMOJIS.map(e => `<button type="button" aria-pressed="${e===sel}" data-a="pick" data-id="${e}" aria-label="Imagem ${e}">${e}</button>`).join("")}</div>`; }
+A.pick = el => { el.parentElement.querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed","false")); el.setAttribute("aria-pressed","true"); };
+const picked = (id, fb) => { const b = document.querySelector(`#${id} [aria-pressed="true"]`); return b ? b.dataset.id : (fb || "⭐"); };
+const progHTML = (n, i) => `<div class="prog" aria-hidden="true">${Array.from({length:n}, (_,k) => `<i class="${k<=i?"on":""}"></i>`).join("")}</div>`;
+
+/* =========================================================
+   BOAS-VINDAS, CADASTRO, LOGIN
+   ========================================================= */
+let onbStep = 0, onbSlide = 0, onbMode = "signup";
+const SLIDES = [
+  {art:["💬","🗓️","📖"], t:"Um app que se adapta a você", p:"Ferramentas de apoio para o dia a dia, no seu ritmo e do seu jeito."},
+  {art:["🎧","🤝","🌿"], t:"Tudo em um só lugar", p:"Organização do dia, comunicação com voz, seu espaço pessoal, plano de apoio, sons calmos e uma rede de profissionais."},
+  {art:["🔒","✋","💜"], t:"Você decide", p:"Você escolhe o que usar e o que compartilhar. Não pedimos diagnóstico."}
+];
+function renderOnb(){
+  const o = $("#onb"); o.hidden = false;
+  let h = "";
+  if(onbMode === "login"){
+    h = `<div class="head"><h1>Entrar</h1><p class="sub">Use o e-mail da sua conta.</p></div>
+      <div class="field"><label for="l-email">E-mail</label><input id="l-email" type="email" autocomplete="email" value="${esc(S.profile.email)}"></div>
+      <div class="field"><label for="l-pass">Senha</label><input id="l-pass" type="password" autocomplete="current-password"></div>
+      <p class="err" id="l-err" hidden></p>
+      <button class="btn solid block" data-a="login">Entrar</button>
+      <button class="btn ghost block" data-a="forgot">Esqueci minha senha</button>
+      <button class="btn ghost block" data-a="onbMode" data-id="signup">Criar uma conta nova</button>
+      <p class="note">${IC.lock}<span>Protótipo: nenhum dado sai deste aparelho.</span></p>`;
+  } else if(onbStep === 0){
+    const s = SLIDES[onbSlide];
+    h = `<div class="welcome-art" aria-hidden="true">${s.art.map((a,i) => `<span class="${["c-lav","c-sky","c-sage"][i]}">${a}</span>`).join("")}</div>
+      <div class="head" style="text-align:center;align-items:center"><h1 style="font-size:30px">${s.t}</h1><p class="sub" style="max-width:34ch">${s.p}</p></div>
+      ${progHTML(3, onbSlide)}
+      <div style="flex:1"></div>
+      <button class="btn solid block" data-a="onbNextSlide">${onbSlide < 2 ? "Continuar" : "Criar minha conta"}</button>
+      <div class="btns"><button class="btn ghost" data-a="onbMode" data-id="login">Já tenho conta</button>${onbSlide<2?`<button class="btn ghost" data-a="onbSkipSlides">Pular apresentação</button>`:""}</div>`;
+  } else {
+    const head = `<div class="between"><span class="stepcount">Passo ${onbStep} de 4</span><button class="btn sm ghost" data-a="onbBack">Voltar</button></div>${progHTML(4, onbStep-1)}`;
+    if(onbStep === 1) h = head + `<div class="head"><h1>Criar conta</h1><p class="sub">Só o necessário. Você pode mudar tudo depois.</p></div>
+      <div class="field"><label for="s-name">Como você quer ser chamado(a/e)?</label><input id="s-name" maxlength="30" value="${esc(S.profile.name)}" placeholder="Nome ou apelido"></div>
+      <div class="field"><label for="s-email">E-mail</label><input id="s-email" type="email" autocomplete="email" value="${esc(S.profile.email)}" placeholder="voce@exemplo.com"></div>
+      <div class="field"><label for="s-pass">Senha</label><input id="s-pass" type="password" autocomplete="new-password"><small>Pelo menos 6 caracteres.</small></div>
+      <p class="err" id="s-err" hidden></p>
+      <p class="note">${IC.lock}<span>Não pedimos diagnóstico. Protótipo: nada é enviado para servidores.</span></p>
+      <button class="btn solid block" data-a="onbSignup">Continuar</button>`;
+    if(onbStep === 2) h = head + `<div class="head"><h1>Deixe do seu jeito</h1><p class="sub">As mudanças aparecem na hora.</p></div>` + accessHTML() +
+      `<button class="btn solid block" data-a="onbNext">Continuar</button>`;
+    if(onbStep === 3) h = head + `<div class="head"><h1>O que você quer usar?</h1><p class="sub">Escolha os módulos. Os outros ficam escondidos até você ligar.</p></div>` + modulesHTML() +
+      `<button class="btn solid block" data-a="onbNext">Continuar</button>`;
+    if(onbStep === 4) h = head + `<div class="head" style="text-align:center;align-items:center"><h1>Tudo pronto${S.profile.name?", "+esc(S.profile.name):""}.</h1><p class="sub" style="max-width:34ch">Escolha um ícone para você. Ele aparece no canto da tela.</p></div>
+      ${pickerHTML("onb-av", S.profile.avatar)}
+      <div style="flex:1"></div><button class="btn solid block" data-a="onbFinish">Entrar no app</button>`;
+  }
+  o.innerHTML = `<div class="full-in zoom">${h}</div>`; o.scrollTop = 0;
+}
+A.onbNextSlide = () => { if(onbSlide < 2) onbSlide++; else onbStep = 1; renderOnb(); };
+A.onbSkipSlides = () => { onbStep = 1; renderOnb(); };
+A.onbMode = el => { onbMode = el.dataset.id; if(onbMode === "signup"){ onbStep = 1; } renderOnb(); };
+A.onbBack = () => { if(onbStep === 1){ onbStep = 0; onbSlide = 2; } else onbStep--; renderOnb(); };
+A.onbNext = () => { onbStep++; renderOnb(); };
+A.onbSignup = () => {
+  const n = $("#s-name").value.trim(), m = $("#s-email").value.trim(), p = $("#s-pass").value, er = $("#s-err");
+  let msg = "";
+  if(!n) msg = "Escreva um nome ou apelido.";
+  else if(!/^\S+@\S+\.\S+$/.test(m)) msg = "Confira o e-mail. Ele precisa ter @ e um domínio, como voce@exemplo.com.";
+  else if(p.length < 6) msg = "A senha precisa ter pelo menos 6 caracteres.";
+  if(msg){ er.textContent = msg; er.hidden = false; return; }
+  S.profile.name = n; S.profile.email = m; persist(); onbStep = 2; renderOnb();
+};
+A.onbFinish = () => { S.profile.avatar = picked("onb-av", "🌱"); S.profile.onboarded = true; S.profile.logged = true; persist(); applyPrefs(); $("#onb").hidden = true; location.hash = "inicio"; rerender(); toast("Que bom ter você aqui."); };
+A.login = () => {
+  const m = $("#l-email").value.trim(), p = $("#l-pass").value, er = $("#l-err");
+  if(!/^\S+@\S+\.\S+$/.test(m) || !p){ er.textContent = "Preencha o e-mail e a senha."; er.hidden = false; return; }
+  S.profile.email = m; S.profile.logged = true; S.profile.onboarded = true;
+  persist(); $("#onb").hidden = true; onbMode = "signup"; rerender(); toast("Você entrou.");
+};
+A.forgot = () => { const er = $("#l-err"); er.textContent = "Na versão final, enviaríamos para o seu e-mail um link para criar uma senha nova."; er.hidden = false; };
+
+/* =========================================================
+   INÍCIO
+   ========================================================= */
+const MOODS = [
+  {t:"Tranquilidade", c:"--sage-ink", m:"Siga no seu ritmo."},
+  {t:"Cansaço", c:"--sky-ink", m:"Você pode deixar para depois o que não for urgente."},
+  {t:"Sobrecarga", c:"--rose-ink", m:"Que tal uma pausa? Os sons e a respiração estão a um toque."},
+  {t:"Ansiedade", c:"--peach-ink", m:"A respiração guiada pode ajudar agora."},
+  {t:"Animação", c:"--butter-ink", m:"Aproveite essa energia do seu jeito."}
+];
+function renderHome(){
+  const greet = hour < 12 ? "Bom dia" : hour < 18 ? "Boa tarde" : "Boa noite";
+  const today = new Date().toDateString();
+  const mi = S.mood && S.mood.d === today ? S.mood.i : -1;
+  let h = `<section class="screen">
+    <div class="head greet"><p class="sub">${greet}</p><h1>${S.profile.name ? "Olá, "+esc(S.profile.name)+"." : "Que bom ter você aqui."}</h1></div>
+    <div class="toolrow"><button class="btn solid sm" data-a="capture">＋ Capturar algo</button>${S.modules.com?`<button class="btn sm" data-a="limits">✋ Limites rápidos</button>`:""}${S.modules.aut?`<button class="btn sm" data-a="planMain">🫶 Meu plano de apoio</button>`:""}</div>
+    ${S.prefs.low?`<p class="lowbadge">Baixa estimulação ligada · <button data-a="lowOff" style="text-decoration:underline">desligar</button></p>`:""}
+    <div class="panel"><h2>Como está sua energia agora?</h2>
+      <div class="chips" role="group" aria-label="Energia agora">${MOODS.map((m,i) => `<button class="chip" aria-pressed="${i===mi}" data-a="mood" data-id="${i}"><span class="dot" style="background:var(${m.c})"></span>${m.t}</button>`).join("")}</div>
+      <p class="sub" style="font-size:14px">${mi >= 0 ? MOODS[mi].t + " registrado. " + MOODS[mi].m : "Opcional. Só você vê."}</p>
+      ${mi === 2 || mi === 3 ? `<button class="btn sm" data-a="pause">Abrir opções de pausa</button>` : ""}
+    </div>`;
+  if(S.modules.rot){
+    const list = periodActs(curP), now = nowAct(list), done = list.filter(a => a.st === "done").length;
+    const pname = PERIODS.find(p => p.id === curP).name.toLowerCase();
+    h += `<div class="section"><h2 class="label">Agora no seu dia</h2><div class="next">` + (now ?
+      `<div class="row"><span class="pict" aria-hidden="true">${now.e}</span><span class="txt"><strong>${esc(now.n)}</strong><small>${now.time?now.time+" · ":""}${done} de ${list.length} feitos ${curP==="livre"?"sem horário":"na "+pname}</small></span></div>
+       <div class="btns">${now.s && now.s.length ? `<button class="btn sm" data-a="guide" data-id="${now.id}">▶ Fazer passo a passo</button>` : `<button class="btn sm" data-a="actSet" data-id="${now.id}" data-st="done">Concluir</button>`}<a class="btn sm" href="#rotina">Ver meu dia</a></div>` :
+      `<div class="row"><span class="pict" aria-hidden="true">🌿</span><span class="txt"><strong>Período livre</strong><small>Nada pendente agora</small></span></div>`) + `</div></div>`;
+  }
+  if(S.modules.dia && S.privacy.homePreview && diary.length){
+    const e = diary.slice().sort((a,b) => b.date.localeCompare(a.date))[0];
+    h += `<div class="section"><h2 class="label">Último registro do Meu espaço</h2><button class="entry" data-a="go" data-id="diario"><header><span>${fmtDate(e.date)}</span><span class="tag ${LEVELS[e.lvl].c}">Sobrecarga: ${LEVELS[e.lvl].t.toLowerCase()}</span></header>${e.text?`<p>${esc(e.text)}</p>`:""}</button></div>`;
+  }
+  const mods = MODS.filter(m => S.modules[m.k]);
+  if(mods.length){
+    h += `<div class="section"><div class="between"><h2 class="label">Atalhos</h2><button class="btn sm ghost" data-a="openModules">Editar</button></div><div class="areas">` +
+      mods.map((m,i) => `<a class="area ${m.c}${(mods.length%2===1 && i===mods.length-1)?" wide":""}" href="#${m.hash}"><span class="ic">${IC[m.k]}</span><span style="flex:1;min-width:0"><b>${m.name}</b><span>${m.desc}</span></span></a>`).join("") + `</div></div>`;
+  }
+  h += `<button class="pause" data-a="pause"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 6v12M15 6v12"/></svg>Preciso de uma pausa</button></section>`;
+  $("#view").innerHTML = h;
+}
+A.mood = el => { const i = +el.dataset.id; S.mood = (S.mood && S.mood.i === i && S.mood.d === new Date().toDateString()) ? null : {d:new Date().toDateString(), i}; persist(); rerender(); };
+A.pause = () => openSheet(`<h2>Pausa</h2><p class="sub">Escolha o que ajuda agora. Tudo funciona sem precisar falar.</p>
+  <div class="list">
+    ${S.modules.aut && plans.length ? `<button class="setting" data-a="planMain"><span class="ic c-rose">🫶</span><span class="t"><b>Meu plano de apoio</b><small>O que você preparou para momentos assim</small></span>›</button>` : ""}
+    <button class="setting" data-a="lowOn"><span class="ic c-butter">🌙</span><span class="t"><b>Baixa estimulação</b><small>Menos cor, sem animações</small></span>›</button>
+    <button class="setting" data-a="showBig" data-id="Preciso de um tempo. Por favor, fale comigo mais tarde."><span class="ic c-lav">💬</span><span class="t"><b>Mostrar aviso</b><small>Uma mensagem grande para outras pessoas lerem</small></span>›</button>
+    <button class="setting" data-a="breath"><span class="ic c-sky">🫧</span><span class="t"><b>Respirar</b><small>Respiração guiada com contagem</small></span>›</button>
+    <button class="setting" data-a="ground"><span class="ic c-sage">🖐️</span><span class="t"><b>Exercício 5-4-3-2-1</b><small>Voltar para o presente pelos sentidos, passo a passo</small></span>›</button>
+    ${S.modules.bem ? `<button class="setting" data-a="go" data-id="bem-estar"><span class="ic c-peach">🎧</span><span class="t"><b>Sons calmos</b><small>Ruído marrom, chuva, ondas e mais</small></span>›</button>` : ""}
+  </div><button class="btn ghost block" data-a="closeSheet">Fechar</button>`);
+A.showBig = el => { closeSheet(); showSentence([{e:"✋", t:el.dataset.id, say:el.dataset.id}]); };
+A.openModules = () => { location.hash = "perfil"; setTimeout(() => A.setModules(), 30); };
+
+/* =========================================================
+   COMUNICAÇÃO
+   ========================================================= */
+const CATS = [
+  {id:"fav", name:"★ Favoritos", c:"c-butter"},
+  {id:"nec", name:"Necessidades", c:"c-sky"},
+  {id:"emo", name:"Emoções", c:"c-lav"},
+  {id:"des", name:"Desconfortos", c:"c-rose"},
+  {id:"ped", name:"Pedidos", c:"c-peach"},
+  {id:"soc", name:"Social", c:"c-sage"},
+  {id:"lug", name:"Lugares", c:"c-butter"}
+];
+const BASE = [
+  ["b1","nec","🙋","Eu","Eu","Fala de você. Use para começar uma frase.","Eu + quero + água"],
+  ["b2","nec","👉","quero","quero","Mostra que você deseja alguma coisa.","Eu + quero + descansar"],
+  ["b3","nec","🙏","preciso de","preciso de","Mostra que algo é importante ou urgente para você.","Eu + preciso de + silêncio"],
+  ["b4","nec","💧","água","água","Beber água ou estar com sede.","Eu + quero + água"],
+  ["b5","nec","🍎","comer","comer","Estar com fome ou querer comer algo.","Eu + quero + comer"],
+  ["b6","nec","🚻","banheiro","ir ao banheiro","Precisar ir ao banheiro.","Eu + preciso de + banheiro"],
+  ["b7","nec","🛏️","descansar","descansar","Deitar, dormir ou ficar sem fazer nada por um tempo.","Eu + preciso de + descansar"],
+  ["b8","nec","🤫","silêncio","silêncio","Precisar de menos barulho ou de não conversar.","Eu + preciso de + silêncio"],
+  ["b9","nec","🤝","ajuda","ajuda","Pedir que alguém ajude você.","Eu + preciso de + ajuda"],
+  ["e1","emo","😊","Estou feliz","Estou feliz","Sentir alegria ou estar bem.",""],
+  ["e2","emo","😟","Estou com ansiedade","Estou com ansiedade","Preocupação, coração acelerado ou inquietação.","Estou com ansiedade + Pausa"],
+  ["e3","emo","😢","Estou triste","Estou triste","Sentir tristeza, vontade de chorar ou desânimo.",""],
+  ["e4","emo","😠","Estou com raiva","Estou com raiva","Sentir irritação ou raiva. Às vezes ajuda pedir espaço.","Estou com raiva + Eu + preciso de + silêncio"],
+  ["e5","emo","😴","Estou com sono","Estou com sono","Cansaço no corpo ou vontade de dormir.",""],
+  ["e6","emo","🌀","Estou em sobrecarga","Estou em sobrecarga","Muitos estímulos ao mesmo tempo. Fica difícil pensar, falar ou ficar no lugar.","Estou em sobrecarga + Sair daqui"],
+  ["e7","emo","😕","Não sei o que sinto","Não sei bem o que estou sentindo","Quando é difícil dar nome ao que sente. Tudo bem.",""],
+  ["d1","des","🔊","Muito barulho","Está muito barulho","O som está alto demais ou incomoda.",""],
+  ["d2","des","💡","Luz forte","A luz está forte demais","A luz incomoda os olhos ou a cabeça.",""],
+  ["d3","des","👃","Cheiro forte","Tem um cheiro forte me incomodando","Algum cheiro está incomodando.",""],
+  ["d4","des","🧥","Roupa incomoda","A roupa está me incomodando","Etiqueta, tecido ou aperto da roupa incomoda.",""],
+  ["d5","des","👥","Muita gente","Tem gente demais aqui","Lugar cheio ou pessoas muito perto.",""],
+  ["d6","des","🤕","Sinto dor","Estou sentindo dor","Alguma parte do corpo dói.",""],
+  ["d7","des","🥶","Frio ou calor","A temperatura está me incomodando","Sentir frio ou calor demais.",""],
+  ["p1","ped","🐢","Mais devagar","Pode falar mais devagar, por favor?","Pedir que a pessoa fale com calma.",""],
+  ["p2","ped","🔁","Repita","Pode repetir, por favor?","Pedir que a pessoa diga de novo.",""],
+  ["p3","ped","✍️","Escreva","Pode escrever para mim?","Pedir a informação por escrito.",""],
+  ["p4","ped","⏸️","Pausa","Preciso de uma pausa","Parar um pouco o que está fazendo.",""],
+  ["p5","ped","🚪","Sair daqui","Preciso sair daqui um pouco","Ir para um lugar mais calmo.",""],
+  ["p6","ped","🙅","Não me toque","Por favor, não me toque","Pedir que ninguém encoste em você agora.",""],
+  ["p7","ped","👀","Me mostre","Pode me mostrar como faz?","Pedir um exemplo visual em vez de explicação falada.",""],
+  ["s1","soc","👋","Oi","Oi","Cumprimentar alguém.",""],
+  ["s2","soc","✅","Sim","Sim","Concordar ou dizer que quer.",""],
+  ["s3","soc","❌","Não","Não","Discordar ou dizer que não quer.",""],
+  ["s4","soc","💜","Agradeço","Agradeço","Agradecer a alguém.",""],
+  ["s5","soc","🗣️","Não consigo falar agora","Não estou conseguindo falar agora, mas estou entendendo","Avisa que você entende, mas a fala não está saindo.",""],
+  ["s6","soc","🙂","Tchau","Tchau","Despedir-se.",""],
+  ["s7","soc","❓","Não entendi","Não entendi","Avisar que algo não ficou claro.","Não entendi + Escreva"],
+  ["l1","lug","🏠","casa","casa","A sua casa ou voltar para casa.","Eu + quero + casa"],
+  ["l2","lug","🏫","escola","escola","Escola, faculdade ou curso.",""],
+  ["l3","lug","💼","trabalho","trabalho","O lugar onde você trabalha.",""],
+  ["l4","lug","🌳","lá fora","lá fora","Sair, ir para um espaço aberto.","Eu + quero + lá fora"],
+  ["l5","lug","🛒","mercado","mercado","Mercado ou loja.",""],
+  ["l6","lug","🏥","médico","médico","Consultório, clínica ou hospital.",""]
+].map(r => ({id:r[0],cat:r[1],e:r[2],t:r[3],say:r[4],m:r[5],ex:r[6]}));
+let custom = load("cards", []);
+let favs = load("favs", ["s2","s3","p4","b4","s5","e6"]);
+let curCat = "fav", sentence = [], lastCard = null;
+const allCards = () => BASE.concat(custom);
+const findCard = id => allCards().find(c => c.id === id);
+const catOf = id => CATS.find(c => c.id === id) || CATS[1];
+const pictHTML = c => c.img ? `<img src="${c.img}" alt="">` : `<span class="e" aria-hidden="true">${c.e}</span>`;
+
+function renderCom(){
+  const pnl = curCat.indexOf("pn:") === 0 ? panels.find(p => "pn:"+p.id === curCat) : null;
+  if(curCat.indexOf("pn:") === 0 && !pnl) curCat = "fav";
+  const list = pnl ? pnl.ids.map(findCard).filter(Boolean) : curCat === "fav" ? allCards().filter(c => favs.includes(c.id)) : allCards().filter(c => c.cat === curCat);
+  let cards = list.map(c => { const on = favs.includes(c.id);
+    return `<div class="card-wrap"><button class="card ${catOf(c.cat).c}" data-a="card" data-id="${c.id}">${pictHTML(c)}${esc(c.t)}</button>
+      <button class="mini info" data-a="cardInfo" data-id="${c.id}" aria-label="O que significa: ${esc(c.t)}">i</button>
+      <button class="mini fav" data-a="fav" data-id="${c.id}" aria-pressed="${on}" aria-label="${on?"Tirar dos favoritos":"Adicionar aos favoritos"}">${on?"★":"☆"}</button></div>`; }).join("");
+  if(curCat === "fav" && !list.length) cards = `<p class="empty">Toque na estrela de qualquer card para trazê-lo para cá.</p>`;
+  if(pnl && !list.length) cards = `<p class="empty">Este painel ainda está vazio. Toque em Editar painel para escolher os cards.</p>`;
+  cards += `<button class="card add-card" data-a="newCard"><span class="e" aria-hidden="true">＋</span>Criar card</button>`;
+  $("#view").innerHTML = `<section class="screen">
+    <div class="head"><h1>Comunicação</h1><p class="sub">Toque nos cards para montar a frase e depois em Falar ou Mostrar. O <b>i</b> no canto de cada card explica o que ele significa.</p></div>
+    <div class="toolrow"><button class="btn sm" data-a="limits">✋ Limites rápidos</button>${S.modules.aut?`<button class="btn sm" data-a="planMain">🫶 Meu plano de apoio</button>`:""}</div>
+    <div class="strip" aria-label="Frase montada">
+      <div class="strip-words" id="strip" aria-live="polite"></div>
+      <div class="meaning" id="meaning" hidden></div>
+      <div class="strip-actions">
+        <button class="btn ghost sm" data-a="undo" aria-label="Apagar último card"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6H9l-5 6 5 6h11z"/><path d="M12 10l4 4M16 10l-4 4"/></svg></button>
+        <button class="btn ghost sm" data-a="clear">Limpar</button>
+        <button class="btn ghost sm" data-a="showSentence">Mostrar</button>
+        <button class="btn solid sm" data-a="speakSentence">${IC.speak}Falar</button>
+      </div>
+    </div>
+    <div class="section"><div class="between"><h2 class="label">Painéis por lugar</h2>${pnl?`<button class="btn sm ghost" data-a="panelEdit" data-id="${pnl.id}">Editar painel</button>`:""}</div>
+    <div class="cats" aria-label="Painéis por lugar">${panels.map(p => `<button class="chip" aria-pressed="${"pn:"+p.id===curCat}" data-a="cat" data-id="pn:${p.id}">${p.e} ${esc(p.n)}</button>`).join("")}<button class="chip" data-a="panelNew">＋ Painel</button></div></div>
+    <div class="cats" role="tablist" aria-label="Categorias">${CATS.map(c => `<button class="chip" role="tab" aria-pressed="${c.id===curCat}" aria-selected="${c.id===curCat}" data-a="cat" data-id="${c.id}">${c.name}</button>`).join("")}</div>
+    <div class="cards">${cards}</div>
+    <p class="note">${IC.lock}<span>Cards criados por você ficam salvos só neste aparelho. Você pode usar fotos de pessoas, objetos e lugares do seu dia.</span></p>
+  </section>`;
+  renderStrip();
+}
+function renderStrip(){
+  const el = $("#strip"); if(!el) return;
+  el.innerHTML = sentence.length ? sentence.map(c => `<span class="word">${c.img?`<img src="${c.img}" alt="">`:`<span aria-hidden="true">${c.e}</span>`}${esc(c.t)}</span>`).join("") : `<span class="ph">Sua frase aparece aqui</span>`;
+  const m = $("#meaning");
+  if(lastCard && lastCard.m){ m.hidden = false; m.innerHTML = `<span class="me" aria-hidden="true">${lastCard.img?"🖼️":lastCard.e}</span><span><b>${esc(lastCard.t)}:</b> ${esc(lastCard.m)}</span>`; } else m.hidden = true;
+}
+A.cat = el => { curCat = el.dataset.id; rerender(); };
+A.card = el => { const c = findCard(el.dataset.id); sentence.push(c); lastCard = c; renderStrip(); speak(c.say || c.t); };
+A.fav = el => { const id = el.dataset.id, i = favs.indexOf(id); if(i >= 0) favs.splice(i,1); else favs.push(id); save("favs", favs); rerender(); };
+A.undo = () => { sentence.pop(); lastCard = sentence[sentence.length-1] || null; renderStrip(); };
+A.clear = () => { sentence = []; lastCard = null; renderStrip(); };
+A.speakSentence = () => { if(!sentence.length) return toast("Toque em um ou mais cards primeiro."); speak(sentence.map(c => c.say || c.t).join(" ")); };
+A.showSentence = () => { if(!sentence.length) return toast("Toque em um ou mais cards primeiro."); showSentence(sentence); };
+function showSentence(list){
+  openFull(`<div class="between"><h2>Para você ler</h2><button class="btn ghost" data-a="closeFull">Fechar</button></div>
+    <div class="show-text">${list.map(c => `<span>${c.img?`<img src="${c.img}" alt="">`:`<i aria-hidden="true">${c.e}</i>`}${esc(c.t)}</span>`).join("")}</div>
+    <button class="btn solid block" data-a="say" data-id="${esc(list.map(c => c.say || c.t).join(" "))}">${IC.speak}Falar em voz alta</button>`);
+}
+A.cardInfo = el => {
+  const c = findCard(el.dataset.id), cat = catOf(c.cat), mine = c.id[0] === "c";
+  openSheet(`<div style="display:flex;gap:14px;align-items:center"><span class="pict ${cat.c}" style="width:72px;height:72px;font-size:40px">${c.img?`<img src="${c.img}" alt="" style="width:72px;height:72px;border-radius:16px;object-fit:cover">`:c.e}</span>
+      <div style="display:flex;flex-direction:column;gap:6px;align-items:flex-start"><h2>${esc(c.t)}</h2><span class="tag ${cat.c}">${cat.name.replace("★ ","")}</span></div></div>
+    <dl class="kv"><dt>Significa</dt><dd>${esc(c.m || "Card criado por você.")}</dd>
+      <dt>A voz diz</dt><dd>“${esc(c.say || c.t)}”</dd>
+      ${c.ex ? `<dt>Exemplo</dt><dd>${esc(c.ex)}</dd>` : ""}</dl>
+    <div class="btns"><button class="btn ghost" data-a="say" data-id="${esc(c.say || c.t)}">${IC.speak}Ouvir</button><button class="btn solid" data-a="addFromInfo" data-id="${c.id}">Adicionar à frase</button></div>
+    ${mine ? `<button class="btn warn block" data-a="delCard" data-id="${c.id}">Apagar este card</button>` : ""}`);
+};
+A.addFromInfo = el => { const c = findCard(el.dataset.id); sentence.push(c); lastCard = c; closeSheet(); renderStrip(); };
+A.delCard = el => {
+  if(el.dataset.confirm !== "1"){ el.dataset.confirm = "1"; el.textContent = "Toque de novo para apagar"; return; }
+  custom = custom.filter(c => c.id !== el.dataset.id); favs = favs.filter(f => f !== el.dataset.id); save("cards", custom); save("favs", favs);
+  sentence = sentence.filter(c => c.id !== el.dataset.id); closeSheet(); rerender(); toast("Card apagado.");
+};
+let imgData = null;
+A.newCard = () => {
+  imgData = null;
+  openSheet(`<h2>Criar card</h2>
+    <div class="field"><label for="nc-t">Texto do card</label><input id="nc-t" maxlength="40" placeholder="Ex.: Quero meu fone"></div>
+    <div class="field"><label for="nc-s">O que a voz fala</label><input id="nc-s" maxlength="120" placeholder="Se ficar vazio, fala o texto do card"></div>
+    <div class="field"><label for="nc-m">O que significa (aparece no i)</label><input id="nc-m" maxlength="140" placeholder="Ex.: Preciso do fone para diminuir o barulho"></div>
+    <div class="field"><label for="nc-c">Categoria</label><select id="nc-c">${CATS.filter(c => c.id!=="fav").map(c => `<option value="${c.id}" ${c.id===curCat?"selected":""}>${c.name}</option>`).join("")}</select></div>
+    <div class="field"><span class="flabel">Imagem</span>${pickerHTML("nc-e","😊")}</div>
+    <div class="field"><label for="nc-img">Ou use uma foto sua</label><input id="nc-img" type="file" accept="image/*"></div>
+    <p class="err" id="nc-err" hidden></p>
+    <div class="btns"><button class="btn ghost" data-a="closeSheet">Cancelar</button><button class="btn solid" data-a="saveCard">Salvar card</button></div>`);
+  $("#nc-img").addEventListener("change", e => {
+    const f = e.target.files && e.target.files[0]; imgData = null; if(!f) return;
+    const r = new FileReader();
+    r.onload = () => { const im = new Image(); im.onload = () => { const s = 160, cv = document.createElement("canvas"); cv.width = cv.height = s;
+      const k = Math.max(s/im.width, s/im.height), w = im.width*k, hh = im.height*k; cv.getContext("2d").drawImage(im,(s-w)/2,(s-hh)/2,w,hh); imgData = cv.toDataURL("image/jpeg",.8); }; im.src = r.result; };
+    r.readAsDataURL(f);
+  });
+};
+A.saveCard = () => {
+  const t = $("#nc-t").value.trim(); if(!t){ const e = $("#nc-err"); e.textContent = "Escreva o texto do card."; e.hidden = false; return; }
+  const c = {id:"c"+Date.now(), cat:$("#nc-c").value, e:picked("nc-e"), t, say:$("#nc-s").value.trim() || t, m:$("#nc-m").value.trim() || "Card criado por você.", ex:""};
+  if(imgData) c.img = imgData;
+  custom.push(c); save("cards", custom); curCat = c.cat; closeSheet(); rerender(); toast("Card criado.");
+};
+
+/* =========================================================
+   ROTINA
+   ========================================================= */
+const PERIODS = [{id:"manha",name:"Manhã"},{id:"tarde",name:"Tarde"},{id:"noite",name:"Noite"},{id:"livre",name:"Sem horário"}];
+const ss = arr => arr.map(x => ({e:x[0], t:x[1]}));
+const DEFAULT_ACTS = [
+  {id:"a1",p:"manha",e:"⏰",n:"Acordar",time:"07:00",st:"done"},
+  {id:"a2",p:"manha",e:"💊",n:"Tomar remédio",time:"07:10",st:"done",s:ss([["💧","Pegue um copo de água"],["💊","Pegue o remédio da manhã"],["😌","Tome com calma"],["✅","Marque que tomou"]])},
+  {id:"a3",p:"manha",e:"🥣",n:"Tomar café da manhã",time:"07:20",st:"todo",remind:true,s:ss([["🍽️","Pegue prato, copo e talheres"],["🍞","Escolha o que vai comer"],["🪑","Sente-se para comer"],["🧽","Leve a louça para a pia"]])},
+  {id:"a4",p:"manha",e:"🪥",n:"Escovar os dentes",time:"07:40",st:"todo",s:ss([["🪥","Pegue a escova"],["🫧","Coloque um pouco de pasta"],["⏱️","Escove por 2 minutos, todos os lados"],["💧","Enxágue a boca e a escova"]])},
+  {id:"a5",p:"manha",e:"👕",n:"Trocar de roupa",time:"07:50",st:"todo",s:ss([["🌤️","Veja como está o tempo"],["👕","Escolha uma roupa confortável"],["🧦","Vista peça por peça"],["🪞","Confira se está tudo confortável"]])},
+  {id:"a6",p:"manha",e:"🎒",n:"Separar a mochila",d:"caderno, fone e garrafa",time:"08:00",st:"todo",s:ss([["📓","Caderno e estojo"],["🎧","Fone de ouvido"],["💧","Garrafa de água"],["🔑","Chaves e documento"]])},
+  {id:"a7",p:"tarde",e:"🍞",n:"Almoçar",time:"12:30",st:"todo"},
+  {id:"a8",p:"tarde",e:"📚",n:"Estudar",d:"blocos de 25 minutos",time:"14:00",st:"todo",remind:true,s:ss([["📵","Deixe o celular longe ou no silencioso"],["📚","Abra o material de hoje"],["⏱️","Estude 25 minutos com o timer visual"],["☕","Faça uma pausa de 5 minutos"]])},
+  {id:"a9",p:"tarde",e:"🚶",n:"Caminhar",time:"17:00",st:"todo"},
+  {id:"a10",p:"noite",e:"🛁",n:"Tomar banho",time:"20:00",st:"todo",s:ss([["🧴","Separe toalha e roupa"],["🚿","Ajuste a temperatura da água"],["🧼","Lave o corpo e o cabelo"],["🧖","Seque-se e vista-se"]])},
+  {id:"a11",p:"noite",e:"🎧",n:"Momento de descanso",time:"21:00",st:"todo"},
+  {id:"a12",p:"noite",e:"🛏️",n:"Dormir",time:"22:30",st:"todo",s:ss([["💡","Diminua as luzes"],["📵","Deixe o celular carregando longe da cama"],["🎧","Se quiser, ligue um som calmo"],["🛏️","Deite-se e respire devagar"]])}
+];
+let acts = load("acts", null);
+if(!acts || !acts.some(a => a.s)) acts = DEFAULT_ACTS;
+let curP = hour < 12 ? "manha" : hour < 18 ? "tarde" : "noite";
+let openAct = null;
+const STATUS = {done:{l:"Feito",c:"c-sage"}, later:{l:"Para depois",c:"c-butter"}, skip:{l:"Hoje não",c:"c-rose"}, tomorrow:{l:"Amanhã",c:"c-sky"}};
+const periodActs = p => acts.filter(a => a.p === p);
+const nowAct = list => list.find(a => a.st === "todo") || list.find(a => a.st === "later");
+const saveActs = () => save("acts", acts);
+
+function renderRot(){
+  const list = periodActs(curP), now = nowAct(list);
+  const items = list.length ? list.map(a => {
+    const st = STATUS[a.st], isNow = now && a.id === now.id, open = openAct === a.id;
+    const meta = [isNow?"Agora":"", a.time||"", a.s&&a.s.length? a.s.length+" passos":"", a.d?esc(a.d):"", a.remind?"🔔":"", a.trans?"⏭️ aviso de transição":""].filter(Boolean).join(" · ");
+    return `<li class="step st-${a.st}${isNow?" now":""}">
+      <button class="step-main" data-a="actOpen" data-id="${a.id}" aria-expanded="${open}"><span class="e" aria-hidden="true">${a.e}</span><span class="t"><strong>${esc(a.n)}</strong><small>${meta}</small></span>${st?`<span class="tag ${st.c}">${st.l}</span>`:""}</button>
+      ${open ? `<div class="step-actions">
+        ${a.s && a.s.length ? `<button class="go" data-a="guide" data-id="${a.id}">▶ Passo a passo</button>` : ""}
+        ${a.st!=="done" ? `<button class="ok" data-a="actSet" data-id="${a.id}" data-st="done">Concluir</button>` : ""}
+        ${a.st!=="later" ? `<button data-a="actSet" data-id="${a.id}" data-st="later">Deixar para depois</button>` : ""}
+        ${a.st!=="skip" ? `<button data-a="actSet" data-id="${a.id}" data-st="skip">Hoje não</button>` : ""}
+        ${a.st!=="tomorrow" ? `<button data-a="actSet" data-id="${a.id}" data-st="tomorrow">Amanhã</button>` : ""}
+        ${a.st!=="todo" ? `<button data-a="actSet" data-id="${a.id}" data-st="todo">Voltar a pendente</button>` : ""}
+        <button data-a="focus" data-id="${a.id}">🎯 Modo foco</button>
+        <button data-a="actMove" data-id="${a.id}" data-dir="-1" aria-label="Mover para cima">↑</button>
+        <button data-a="actMove" data-id="${a.id}" data-dir="1" aria-label="Mover para baixo">↓</button>
+        <button data-a="actEdit" data-id="${a.id}">Editar</button>
+        <button data-a="actRemind" data-id="${a.id}">🔔 Lembrete${a.remind?" (ligado)":""}</button>
+      </div>` : ""}</li>`; }).join("") : `<li class="empty">Nada planejado para este período. Você pode adicionar algo ou deixar livre.</li>`;
+  const next = now && list.slice(list.indexOf(now)+1).find(a => a.st === "todo");
+  $("#view").innerHTML = `<section class="screen">
+    <div class="head"><h1>Organização</h1><p class="sub">Seu dia, do seu jeito. Toque numa atividade para ver as opções. Mudar de plano faz parte.</p></div>
+    <div class="toolrow"><button class="btn sm" data-a="capture">＋ Capturar</button><button class="btn sm" data-a="inbox">📥 Caixa de entrada${inbox.length?` (${inbox.length})`:""}</button><button class="btn sm" data-a="reorg">🔄 Reorganizar meu dia</button></div>
+    <div class="seg" role="tablist" aria-label="Períodos do dia">${PERIODS.map(p => `<button role="tab" aria-selected="${p.id===curP}" data-a="period" data-id="${p.id}">${p.name}</button>`).join("")}</div>
+    <ul class="steps">${items}</ul>
+    <button class="btn ghost block" data-a="actEdit">＋ Nova atividade</button>
+    <div class="section"><h2 class="label">Cuidados cotidianos</h2><p class="sub" style="font-size:14px">Apoio para o básico do dia. Não é avaliação: nada aqui conta pontos ou cobra.</p><div class="tools">
+      ${CARE.map(c => `<button class="tool ${c.c}" data-a="care" data-id="${c.id}"><span class="big" aria-hidden="true">${c.e}</span><b>${c.n}</b><span>${c.d}</span></button>`).join("")}
+    </div></div>
+    <div class="section"><h2 class="label">Apoios visuais</h2><div class="tools">
+      <button class="tool c-sky" data-a="firstThen"><span class="big" aria-hidden="true">${now?now.e:"🌙"} → ${next?next.e:"🌿"}</span><b>Primeiro / Depois</b><span>A atividade de agora e a seguinte, em tela cheia</span></button>
+      <button class="tool c-lav" data-a="choice"><span class="big" aria-hidden="true">📚 🎨</span><b>Escolha</b><span>Opções grandes para decidir com calma</span></button>
+      <button class="tool c-peach" data-a="timer"><span class="big" aria-hidden="true">⏳</span><b>Timer visual</b><span>Veja o tempo passar sem precisar ler o relógio</span></button>
+      <button class="tool c-sage" data-a="resetDay"><span class="big" aria-hidden="true">🌅</span><b>Recomeçar o dia</b><span>Volta tudo a pendente, sem histórico de cobrança</span></button>
+    </div></div>
+  </section>`;
+}
+A.period = el => { curP = el.dataset.id; openAct = null; rerender(); };
+A.actOpen = el => { openAct = openAct === el.dataset.id ? null : el.dataset.id; rerender(); };
+A.actSet = el => {
+  const a = acts.find(x => x.id === el.dataset.id), st = el.dataset.st; a.st = st; openAct = null;
+  if(st === "later"){ acts.splice(acts.indexOf(a),1); let last = -1; acts.forEach((x,j) => { if(x.p === a.p) last = j; }); acts.splice(last+1,0,a); toast("Tudo bem. Ficou para o fim do período."); }
+  if(st === "skip") toast("Tudo bem. Amanhã é outro dia.");
+  if(st === "tomorrow") toast("Combinado. Fica para amanhã.");
+  if(st === "done"){ const pl = periodActs(a.p); toast(pl.every(x => x.st === "done" || x.st === "skip") ? "Período concluído do seu jeito." : "Feito."); }
+  saveActs(); rerender();
+};
+A.actMove = el => {
+  const a = acts.find(x => x.id === el.dataset.id), pl = periodActs(a.p), k = pl.indexOf(a), t = pl[k + +el.dataset.dir];
+  if(t){ const ia = acts.indexOf(a), ib = acts.indexOf(t); acts[ia] = t; acts[ib] = a; saveActs(); rerender(); }
+};
+A.resetDay = () => { acts.forEach(a => a.st = "todo"); saveActs(); rerender(); toast("Dia recomeçado."); };
+A.actEdit = el => {
+  const a = el.dataset.id ? acts.find(x => x.id === el.dataset.id) : null;
+  openSheet(`<h2>${a ? "Editar atividade" : "Nova atividade"}</h2>
+    <div class="field"><label for="na-n">Nome</label><input id="na-n" maxlength="40" value="${esc(a?a.n:"")}" placeholder="Ex.: Regar as plantas"></div>
+    <div class="field"><label for="na-d">Descrição (opcional)</label><input id="na-d" maxlength="80" value="${esc(a?a.d||"":"")}" placeholder="Ex.: só as da varanda"></div>
+    <div class="two"><div class="field"><label for="na-t">Horário (opcional)</label><input id="na-t" type="time" value="${a?a.time||"":""}"></div>
+      <div class="field"><label for="na-p">Período</label><select id="na-p">${PERIODS.map(p => `<option value="${p.id}" ${(a?a.p:curP)===p.id?"selected":""}>${p.name}</option>`).join("")}</select></div></div>
+    <div class="field"><span class="flabel">Imagem</span>${pickerHTML("na-e", a ? a.e : "🧹")}</div>
+    <div class="field"><label for="na-s">Passo a passo (opcional)</label><textarea id="na-s" placeholder="Um passo por linha. Ex.:&#10;Encher o regador&#10;Regar devagar cada vaso&#10;Guardar o regador">${a&&a.s?esc(a.s.map(x => x.t).join("\n")):""}</textarea><small>Cada linha vira uma etapa com tela própria.</small></div>
+    ${toggleHTML("na-r", a ? a.remind : false, "Quero um lembrete", "Você ajusta como ele chega em 🔔 Lembrete")}
+    ${toggleHTML("na-tr", a ? a.trans : false, "Aviso de transição", "Avisa antes da troca e mostra o que vem depois")}
+    <p class="err" id="na-err" hidden></p>
+    <div class="btns">${a?`<button class="btn warn" data-a="actDel" data-id="${a.id}">Remover</button>`:`<button class="btn ghost" data-a="closeSheet">Cancelar</button>`}<button class="btn solid" data-a="actSave" data-id="${a?a.id:""}">${a?"Salvar":"Adicionar"}</button></div>`);
+};
+A.actSave = el => {
+  const n = $("#na-n").value.trim(); if(!n){ const e = $("#na-err"); e.textContent = "Dê um nome para a atividade."; e.hidden = false; return; }
+  const old = el.dataset.id ? acts.find(x => x.id === el.dataset.id) : null;
+  const prev = old ? old.s || [] : [];
+  const lines = $("#na-s").value.split("\n").map(x => x.trim()).filter(Boolean);
+  const a = old || {id:"a"+Date.now(), st:"todo"};
+  Object.assign(a, {n, d:$("#na-d").value.trim(), time:$("#na-t").value, p:$("#na-p").value, e:picked("na-e"), remind:isOn("na-r"), trans:isOn("na-tr"),
+    s:lines.map((t,i) => ({e:(prev[i] && prev[i].t === t) ? prev[i].e : (i === lines.length-1 ? "✅" : "👉"), t}))});
+  if(old) acts.splice(acts.indexOf(old),1);
+  let before = a.time ? acts.findIndex(x => x.p === a.p && x.time && x.time > a.time) : -1;
+  if(before < 0){ let last = -1; acts.forEach((x,j) => { if(x.p === a.p) last = j; }); before = last < 0 ? acts.length : last+1; }
+  acts.splice(before, 0, a); saveActs(); curP = a.p; openAct = null; closeSheet(); rerender(); toast(old ? "Atividade salva." : "Atividade adicionada.");
+};
+A.actDel = el => {
+  if(el.dataset.confirm !== "1"){ el.dataset.confirm = "1"; el.textContent = "Toque de novo"; return; }
+  acts = acts.filter(x => x.id !== el.dataset.id); saveActs(); openAct = null; closeSheet(); rerender(); toast("Atividade removida.");
+};
+/* passo a passo */
+let G = null;
+A.guide = el => { const a = acts.find(x => x.id === el.dataset.id); G = {a, i:0}; renderGuide(); };
+function renderGuide(){
+  const {a, i} = G, n = a.s.length, s = a.s[i], last = i === n-1;
+  openFull(`<div class="between"><span class="stepcount">${esc(a.n)} · Passo ${i+1} de ${n}</span><button class="btn sm ghost" data-a="closeFull">Sair</button></div>
+    ${progHTML(n, i)}
+    <div class="guide-card c-sky"><span class="big-e" aria-hidden="true">${s.e}</span><b>${esc(s.t)}</b><p>${i+1<n?"Depois: "+esc(a.s[i+1].t):"Último passo"}</p></div>
+    <button class="btn ghost block" data-a="say" data-id="${esc(s.t)}">${IC.speak}Ouvir este passo</button>
+    <div class="btns"><button class="btn ghost" data-a="guideNav" data-id="-1" ${i===0?"disabled":""}>Voltar</button>
+    ${last ? `<button class="btn solid" data-a="guideDone">Concluir atividade</button>` : `<button class="btn solid" data-a="guideNav" data-id="1">Próximo</button>`}</div>`, () => { G = null; rerender(); });
+}
+A.guideNav = el => { G.i = Math.max(0, Math.min(G.a.s.length-1, G.i + +el.dataset.id)); renderGuide(); };
+A.guideDone = () => { G.a.st = "done"; if(G.a.care) G.a.st = "todo"; saveActs(); const n = G.a.n; closeFull(); toast(n + ": feito."); };
+/* primeiro/depois, escolha, timer */
+A.firstThen = () => {
+  const list = periodActs(curP), now = nowAct(list), next = now && list.slice(list.indexOf(now)+1).find(a => a.st === "todo");
+  const p = (l, a, f) => `<small>${l}</small><span class="big-e" aria-hidden="true">${a?a.e:f.e}</span><b>${esc(a?a.n:f.n)}</b>`;
+  openFull(`<div class="between"><h2>Primeiro / Depois</h2><button class="btn ghost" data-a="closeFull">Fechar</button></div>
+    <div class="ft-big"><button class="ft-panel c-sky" data-a="say" data-id="Primeiro, ${esc(now?now.n:"nada pendente")}">${p("Primeiro", now, {e:"🌙",n:"Nada pendente"})}</button>
+    <div class="ft-arrow" aria-hidden="true">↓</div>
+    <button class="ft-panel c-lav" data-a="say" data-id="Depois, ${esc(next?next.n:"tempo livre")}">${p("Depois", next, {e:"🌿",n:"Tempo livre"})}</button></div>
+    <p class="sub" style="text-align:center">Toque num quadro para ouvir.</p>`);
+};
+const CHOICES = [
+  [["📚","Ler","c-sky"],["🎨","Desenhar","c-peach"]],
+  [["🍎","Fruta","c-rose"],["🍞","Pão","c-butter"]],
+  [["🎧","Música","c-lav"],["🤫","Silêncio","c-sage"]],
+  [["🏠","Ficar em casa","c-peach"],["🌳","Sair um pouco","c-sage"]],
+  [["🚿","Banho agora","c-sky"],["⏳","Banho depois","c-lav"]]
+];
+let chIdx = 0;
+A.choice = () => renderChoice();
+function renderChoice(sel){
+  openFull(`<div class="between"><h2>O que você prefere?</h2><button class="btn ghost" data-a="closeFull">Fechar</button></div>
+    <div class="choice-grid">${CHOICES[chIdx].map((o,i) => `<button class="choice ${o[2]}" aria-pressed="${sel===i}" data-a="choose" data-id="${i}"><span class="big-e" aria-hidden="true">${o[0]}</span>${o[1]}</button>`).join("")}</div>
+    <button class="btn ghost block" data-a="chNext">Trocar opções (${chIdx+1} de ${CHOICES.length})</button>`);
+}
+A.choose = el => { const i = +el.dataset.id; renderChoice(i); speak("Eu escolho " + CHOICES[chIdx][i][1].toLowerCase()); };
+A.chNext = () => { chIdx = (chIdx+1) % CHOICES.length; renderChoice(); };
+let TM = null;
+function stopTimer(){ if(TM){ clearInterval(TM); TM = null; } }
+A.timer = () => {
+  stopTimer();
+  openFull(`<div class="between"><h2>Timer visual</h2><button class="btn ghost" data-a="closeFull">Fechar</button></div>
+    <p class="sub">Escolha quanto tempo. A cor some aos poucos até o fim.</p>
+    <div class="chips">${[2,5,10,15,25].map(m => `<button class="chip" aria-pressed="false" data-a="timerStart" data-id="${m}">${m} min</button>`).join("")}</div>
+    <div class="timer-ring" id="tm-ring" style="background:conic-gradient(var(--peach-ink) 360deg, var(--line) 0)"><div id="tm-txt">--:--</div></div>
+    <p class="sub" id="tm-msg" style="text-align:center">Toque num tempo para começar.</p>`);
+};
+A.timerStart = el => {
+  stopTimer(); const total = +el.dataset.id * 60, end = Date.now() + total*1000;
+  document.querySelectorAll("#full .chip").forEach(c => c.setAttribute("aria-pressed", c === el));
+  const tick = () => { const r = $("#tm-ring"); if(!r) return stopTimer();
+    const left = Math.max(0, Math.round((end - Date.now())/1000)), deg = left/total*360;
+    r.style.background = `conic-gradient(var(--peach-ink) ${deg}deg, var(--line) 0)`; $("#tm-txt").textContent = pad(Math.floor(left/60))+":"+pad(left%60);
+    $("#tm-msg").textContent = left ? "O tempo está passando. Você pode fechar quando quiser." : "Acabou o tempo.";
+    if(!left){ stopTimer(); speak("Acabou o tempo."); } };
+  TM = setInterval(tick, 1000); tick();
+};
+
+/* =========================================================
+   DIÁRIO
+   ========================================================= */
+const EMO = ["😊 Alegria","😌 Calma","😟 Ansiedade","😢 Tristeza","😠 Raiva","😴 Cansaço","😕 Confusão","🤩 Empolgação","😶 Não sei dizer"];
+const STIM = ["🔊 Barulho","💡 Luz","👃 Cheiro","🧥 Toque ou roupa","👥 Muita gente","🔄 Mudança de planos","💬 Muita conversa","🌡️ Temperatura"];
+const STRAT = ["🎧 Fone de ouvido","🚪 Sair do lugar","🫧 Respirar","🛏️ Descansar","🧸 Objeto de conforto","🎵 Música","✍️ Escrever","🤝 Falar com alguém","💧 Beber água","🚶 Caminhar"];
+const LEVELS = [{t:"Nenhuma",c:"c-sage"},{t:"Leve",c:"c-butter"},{t:"Média",c:"c-peach"},{t:"Forte",c:"c-rose"}];
+let diary = load("diary", null) || [
+  {id:"d1", date:agoAt(1,19,40), emo:["😟 Ansiedade","😴 Cansaço"], lvl:3, stim:["🔊 Barulho","👥 Muita gente"], text:"O mercado estava cheio e com música alta. Saí antes de terminar as compras.", strat:["🎧 Fone de ouvido","🚪 Sair do lugar"], share:false, ex:true},
+  {id:"d2", date:agoAt(3,10,15), emo:["😌 Calma"], lvl:0, stim:[], text:"Manhã tranquila. Segui a rotina no meu ritmo e ainda li um pouco.", strat:["🎵 Música"], share:false, ex:true},
+  {id:"d3", date:agoAt(5,15,30), emo:["😕 Confusão"], lvl:2, stim:["🔄 Mudança de planos","🔊 Barulho"], text:"A aula mudou de sala sem aviso. Fiquei com a cabeça cheia e demorei para me achar.", strat:["🫧 Respirar","✍️ Escrever","🎧 Fone de ouvido"], share:false, ex:true}
+];
+const saveDiary = () => save("diary", diary);
+let dFilter = "all", diaryUnlocked = false;
+function renderDia(){
+  if(S.privacy.lockDiary && !diaryUnlocked){
+    $("#view").innerHTML = `<section class="screen"><div class="head"><h1>Meu espaço</h1></div>
+      <div class="panel" style="align-items:center;text-align:center"><span style="font-size:44px" aria-hidden="true">🔒</span><h2>Meu espaço protegido</h2><p class="sub">Na versão final, abre com a senha ou a digital do aparelho.</p><button class="btn solid" data-a="unlockDiary">Desbloquear</button></div></section>`;
+    return;
+  }
+  const list = diary.slice().sort((a,b) => b.date.localeCompare(a.date)).filter(e => dFilter === "all" || (dFilter === "over" && e.lvl >= 2) || (dFilter === "strat" && e.strat.length));
+  const count = get => { const m = {}; diary.forEach(e => get(e).forEach(x => m[x] = (m[x]||0)+1)); return Object.entries(m).sort((a,b) => b[1]-a[1])[0]; };
+  const topS = count(e => e.stim), topH = count(e => e.strat);
+  $("#view").innerHTML = `<section class="screen">
+    <div class="head"><h1>Meu espaço</h1><p class="sub">Seu lugar privado: registre como foi, o que pesou e o que ajudou, e explique suas necessidades no seu manual.</p></div>
+    <p class="note">${IC.lock}<span>Seus registros são privados. Nada é compartilhado com profissionais, a não ser que você libere um registro específico.</span></p>
+    <div class="btns"><button class="btn solid" data-a="diaryNew">＋ Registro guiado</button><button class="btn" data-a="quickEntry">✍️ Escrever ou falar</button></div>
+    <div class="panel c-lav"><h2>📘 Meu manual pessoal</h2><p style="font-size:14px">Explique uma vez como você se comunica, o que ajuda e o que evitar. Mostre só quando e para quem quiser.</p>
+      <p style="font-size:13px">${MANUAL.filter(m => (manual[m[0]]||"").trim()).length} de ${MANUAL.length} partes preenchidas</p>
+      <div class="btns"><button class="btn sm" data-a="manualEdit">Editar</button><button class="btn sm solid" data-a="manualShow">Mostrar</button></div></div>
+    ${diary.length >= 2 ? `<div class="section"><h2 class="label">O que seus registros mostram</h2><div class="insight">
+      <div class="c-rose"><span>Estímulo mais comum</span><b>${topS ? esc(topS[0]) : "Nenhum"}</b><span>${topS ? topS[1]+" registro"+(topS[1]>1?"s":"") : ""}</span></div>
+      <div class="c-sage"><span>O que mais ajudou</span><b>${topH ? esc(topH[0]) : "Nada ainda"}</b><span>${topH ? topH[1]+" registro"+(topH[1]>1?"s":"") : ""}</span></div></div></div>` : ""}
+    <div class="section"><h2 class="label">Meus registros</h2><div class="chips" role="group" aria-label="Filtrar">${[["all","Todos"],["over","Com sobrecarga"],["strat","Com estratégias"]].map(f => `<button class="chip" aria-pressed="${dFilter===f[0]}" data-a="dFilter" data-id="${f[0]}">${f[1]}</button>`).join("")}</div>
+    <div class="entries">${list.length ? list.map(e => `<button class="entry" data-a="diaryOpen" data-id="${e.id}">
+      <header><span>${fmtDate(e.date)}${e.ex?" · exemplo":""}</span><span class="tag ${LEVELS[e.lvl].c}">Sobrecarga: ${LEVELS[e.lvl].t.toLowerCase()}</span></header>
+      ${e.emo.length?`<span class="tags">${e.emo.map(x => `<span class="tag c-lav">${esc(x)}</span>`).join("")}</span>`:""}
+      ${e.text?`<p>${esc(e.text)}</p>`:""}
+      ${e.strat.length?`<span class="strategy">Ajudou: ${e.strat.map(esc).join(", ")}</span>`:""}</button>`).join("") : `<p class="empty">Nenhum registro com esse filtro.</p>`}</div></div>
+  </section>`;
+}
+A.unlockDiary = () => { diaryUnlocked = true; rerender(); };
+A.dFilter = el => { dFilter = el.dataset.id; rerender(); };
+A.diaryOpen = el => {
+  const e = diary.find(x => x.id === el.dataset.id);
+  openSheet(`<span class="stepcount">${fmtDate(e.date)}${e.ex?" · exemplo":""}</span>
+    <dl class="kv"><dt>Sentimentos</dt><dd>${e.emo.length?e.emo.map(esc).join(", "):"Não registrado"}</dd>
+    <dt>Sobrecarga</dt><dd>${LEVELS[e.lvl].t}${e.stim.length?": "+e.stim.map(esc).join(", "):""}</dd>
+    <dt>O que ajudou</dt><dd>${e.strat.length?e.strat.map(esc).join(", "):"Não registrado"}</dd></dl>
+    ${e.text?`<p style="white-space:pre-wrap">${esc(e.text)}</p>`:""}
+    ${toggleHTML("dshare", e.share, "Permitir compartilhar este registro", "Só vale para este registro. Você pode desligar depois.")}
+    <div class="btns"><button class="btn warn" data-a="diaryDel" data-id="${e.id}">Apagar</button><button class="btn ghost" data-a="closeSheet">Fechar</button></div>`);
+  TOGS.dshare = v => { e.share = v; saveDiary(); };
+};
+A.diaryDel = el => {
+  if(el.dataset.confirm !== "1"){ el.dataset.confirm = "1"; el.textContent = "Toque de novo para apagar"; return; }
+  diary = diary.filter(x => x.id !== el.dataset.id); saveDiary(); closeSheet(); rerender(); toast("Registro apagado.");
+};
+let W = null;
+const WSTEPS = ["Como você se sente?","Teve sobrecarga sensorial?","O que aconteceu?","O que ajudou?","Revisar e salvar"];
+A.diaryNew = () => { W = {i:0, d:{emo:[], lvl:0, stim:[], text:"", strat:[], share:false}}; renderW(); };
+function multi(list, sel, key){ return `<div class="chips">${list.map(x => `<button class="chip" aria-pressed="${sel.includes(x)}" data-a="wToggle" data-k="${key}" data-id="${esc(x)}">${esc(x)}</button>`).join("")}</div>`; }
+function renderW(){
+  const {i, d} = W; let body = "";
+  if(i === 0) body = `<p class="sub">Escolha quantos quiser. Pode pular.</p>${multi(EMO, d.emo, "emo")}`;
+  if(i === 1) body = `<p class="sub">Qual foi a intensidade?</p><div class="seg">${LEVELS.map((l,k) => `<button aria-pressed="${d.lvl===k}" data-a="wLvl" data-id="${k}">${l.t}</button>`).join("")}</div>
+    ${d.lvl ? `<p class="sub">O que estava incomodando?</p>${multi(STIM, d.stim, "stim")}` : ""}`;
+  if(i === 2) body = `<div class="field"><label for="w-text">Escreva do seu jeito. Pode ser uma palavra só.</label><textarea id="w-text" placeholder="Ex.: Muita gente falando ao mesmo tempo na reunião.">${esc(d.text)}</textarea></div>`;
+  if(i === 3) body = `<p class="sub">Isso ajuda você a lembrar das estratégias que funcionam.</p>${multi(strats, d.strat, "strat")}
+    <div class="field"><label for="w-other">Outra coisa que ajudou</label><input id="w-other" maxlength="40" placeholder="Ex.: Ficar no escuro"></div>`;
+  if(i === 4) body = `<div class="panel"><dl class="kv"><dt>Sentimentos</dt><dd>${d.emo.length?d.emo.map(esc).join(", "):"Não registrado"}</dd>
+    <dt>Sobrecarga</dt><dd>${LEVELS[d.lvl].t}${d.stim.length?": "+d.stim.map(esc).join(", "):""}</dd>
+    <dt>Aconteceu</dt><dd>${d.text?esc(d.text):"Não registrado"}</dd>
+    <dt>Ajudou</dt><dd>${d.strat.length?d.strat.map(esc).join(", "):"Não registrado"}</dd></dl></div>
+    ${toggleHTML("w-share", d.share, "Permitir compartilhar com profissionais", "Desligado por padrão. O registro fica só com você.")}`;
+  openFull(`<div class="between"><span class="stepcount">Novo registro · Etapa ${i+1} de 5</span><button class="btn sm ghost" data-a="closeFull">Cancelar</button></div>
+    ${progHTML(5, i)}
+    <h2>${WSTEPS[i]}</h2>${body}<div style="flex:1"></div>
+    <div class="btns"><button class="btn ghost" data-a="wNav" data-id="-1" ${i===0?"disabled":""}>Voltar</button>
+    ${i<4 ? `<button class="btn ghost" data-a="wNav" data-id="1">Pular</button><button class="btn solid" data-a="wNav" data-id="1">Próximo</button>` : `<button class="btn solid" data-a="wSave">Salvar registro</button>`}</div>`, () => { W = null; });
+  TOGS["w-share"] = v => { if(W) W.d.share = v; };
+}
+function wCollect(){ const t = $("#w-text"); if(t) W.d.text = t.value.trim(); const o = $("#w-other"); if(o && o.value.trim()){ const v = "✨ "+o.value.trim(); if(!W.d.strat.includes(v)) W.d.strat.push(v); } }
+A.wNav = el => { wCollect(); W.i = Math.max(0, Math.min(4, W.i + +el.dataset.id)); renderW(); };
+A.wToggle = el => { const arr = W.d[el.dataset.k], v = el.dataset.id, k = arr.indexOf(v); if(k >= 0) arr.splice(k,1); else arr.push(v); el.setAttribute("aria-pressed", k < 0); };
+A.wLvl = el => { W.d.lvl = +el.dataset.id; if(!W.d.lvl) W.d.stim = []; renderW(); };
+A.wSave = () => { wCollect(); diary.push(Object.assign({id:"d"+Date.now(), date:new Date().toISOString()}, W.d)); saveDiary(); W = null; fullClose = null; closeFull(); dFilter = "all"; rerender(); toast("Registro salvo. Só você vê."); };
+
+/* =========================================================
+   BEM-ESTAR (sons gerados no aparelho)
+   ========================================================= */
+const SOUNDS = [
+  {id:"marrom", e:"🟤", n:"Ruído marrom", d:"Grave e constante. Bom para foco.", c:"c-peach"},
+  {id:"chuva", e:"🌧️", n:"Chuva", d:"Chiado suave de chuva.", c:"c-sky"},
+  {id:"ondas", e:"🌊", n:"Ondas", d:"Vai e vem lento do mar.", c:"c-lav"},
+  {id:"vento", e:"🍃", n:"Vento", d:"Sopro que muda devagar.", c:"c-sage"},
+  {id:"ventilador", e:"🌀", n:"Ventilador", d:"Zumbido grave e estável.", c:"c-butter"},
+  {id:"tom", e:"🔔", n:"Tom calmo", d:"Notas longas e suaves.", c:"c-rose"}
+];
+const PRESETS = [
+  {n:"Foco", e:"🎯", mix:{marrom:.6}},
+  {n:"Relaxar", e:"🌧️", mix:{chuva:.5, ondas:.35}},
+  {n:"Dormir", e:"🌙", mix:{ondas:.4, ventilador:.3}, timer:30}
+];
+let mixes = load("mixes", []);
+let vols = load("vols", {}); SOUNDS.forEach(s => { if(vols[s.id] == null) vols[s.id] = .5; });
+let AC = null, master = null, playing = {}, sleepT = null, sleepEnd = 0;
+function noiseBuf(type){
+  const len = AC.sampleRate * 6, b = AC.createBuffer(1, len, AC.sampleRate), d = b.getChannelData(0);
+  let l = 0, b0=0,b1=0,b2=0,b3=0,b4=0,b5=0,b6=0;
+  for(let i=0;i<len;i++){ const w = Math.random()*2-1;
+    if(type === "white") d[i] = w*.5;
+    else if(type === "brown"){ l = (l + .02*w)/1.02; d[i] = l*3.2; }
+    else { b0=.99886*b0+w*.0555179; b1=.99332*b1+w*.0750759; b2=.969*b2+w*.153852; b3=.8665*b3+w*.3104856; b4=.55*b4+w*.5329522; b5=-.7616*b5-w*.016898; d[i]=(b0+b1+b2+b3+b4+b5+b6+w*.5362)*.11; b6=w*.115926; } }
+  return b;
+}
+function startSound(id){
+  if(!AC){ try{ AC = new (window.AudioContext || window.webkitAudioContext)(); master = AC.createGain(); master.connect(AC.destination); }catch(e){ toast("Este navegador não toca sons gerados."); return; } }
+  if(AC.state === "suspended") AC.resume();
+  if(playing[id]) return;
+  const g = AC.createGain(); g.gain.value = 0; g.connect(master);
+  const nodes = [];
+  const src = t => { const s = AC.createBufferSource(); s.buffer = noiseBuf(t); s.loop = true; nodes.push(s); return s; };
+  const lfo = (f, depth, param, base) => { const o = AC.createOscillator(), og = AC.createGain(); o.frequency.value = f; og.gain.value = depth; o.connect(og); og.connect(param); if(base != null) param.value = base; nodes.push(o); };
+  const out = AC.createGain(); out.connect(g);
+  if(id === "marrom"){ src("brown").connect(out); }
+  if(id === "chuva"){ const s = src("white"), hp = AC.createBiquadFilter(), lp = AC.createBiquadFilter(); hp.type="highpass"; hp.frequency.value=500; lp.type="lowpass"; lp.frequency.value=5000; s.connect(hp); hp.connect(lp); lp.connect(out); out.gain.value=.55; }
+  if(id === "ondas"){ const s = src("pink"), lp = AC.createBiquadFilter(); lp.type="lowpass"; lp.frequency.value=800; s.connect(lp); lp.connect(out); lfo(.09, .45, out.gain, .5); }
+  if(id === "vento"){ const s = src("white"), bp = AC.createBiquadFilter(); bp.type="bandpass"; bp.Q.value=1.2; s.connect(bp); bp.connect(out); lfo(.06, 280, bp.frequency, 520); out.gain.value=.9; }
+  if(id === "ventilador"){ const s = src("brown"), lp = AC.createBiquadFilter(); lp.type="lowpass"; lp.frequency.value=380; s.connect(lp); lp.connect(out); out.gain.value=1.3; }
+  if(id === "tom"){ [196, 293.66, 392].forEach((f,k) => { const o = AC.createOscillator(), og = AC.createGain(); o.type="sine"; o.frequency.value=f; og.gain.value=.07/(k+1); o.connect(og); og.connect(out); nodes.push(o); }); lfo(.12, .35, out.gain, .6); }
+  nodes.forEach(n => n.start());
+  g.gain.setValueAtTime(0, AC.currentTime); g.gain.linearRampToValueAtTime(vols[id], AC.currentTime + 1.2);
+  playing[id] = {g, nodes};
+}
+function stopSound(id){ const p = playing[id]; if(!p) return; const t = AC.currentTime; p.g.gain.cancelScheduledValues(t); p.g.gain.setValueAtTime(p.g.gain.value, t); p.g.gain.linearRampToValueAtTime(0, t+.6); setTimeout(() => p.nodes.forEach(n => { try{ n.stop(); }catch(e){} }), 700); delete playing[id]; }
+function stopAll(){ Object.keys(playing).forEach(stopSound); clearTimeout(sleepT); sleepT = null; sleepEnd = 0; }
+function playerHTML(){ const on = Object.keys(playing); if(!on.length) return "";
+  return `<div class="player"><span aria-hidden="true" style="font-size:22px">🎧</span><span class="t"><b>Tocando: ${on.map(id => SOUNDS.find(s => s.id===id).n).join(" + ")}</b>${sleepEnd?`Desliga às ${pad(new Date(sleepEnd).getHours())}:${pad(new Date(sleepEnd).getMinutes())}`:"Sem timer"}</span><button class="btn sm solid" data-a="stopAll">Parar</button></div>`; }
+function renderBem(){
+  $("#view").innerHTML = `<section class="screen">
+    <a class="back" href="#inicio">← Início</a>
+    <div class="head"><h1>Bem-estar sensorial</h1><p class="sub">Sons para focar, relaxar ou abafar o ambiente. Use fone se o lugar estiver cheio.</p></div>
+    ${playerHTML()}
+    <div class="section"><h2 class="label">O que você precisa agora?</h2><div class="quick3">
+      <button class="c-sky" data-a="breath"><span class="big" aria-hidden="true">🫧</span>Respirar</button>
+      <button class="c-sage" data-a="ground"><span class="big" aria-hidden="true">🖐️</span>5-4-3-2-1</button>
+      <button class="c-lav" data-a="preset" data-id="0"><span class="big" aria-hidden="true">🎯</span>Focar</button>
+    </div></div>
+    <div class="section"><h2 class="label">Misturas prontas</h2><div class="chips">${PRESETS.map((p,i) => `<button class="chip" data-a="preset" data-id="${i}">${p.e} ${p.n}${p.timer?` · ${p.timer} min`:""}</button>`).join("")}</div></div>
+    <div class="section"><div class="between"><h2 class="label">Biblioteca de sons</h2><span class="sub" style="font-size:13px">Toque para ligar ou desligar</span></div>
+      <div class="list">${SOUNDS.map(s => `<div class="snd"><button class="play ${s.c}" data-a="snd" data-id="${s.id}" aria-pressed="${!!playing[s.id]}" aria-label="${playing[s.id]?"Pausar":"Tocar"} ${s.n}">${playing[s.id]?"❚❚":"▶"}</button>
+        <div class="nm"><b>${s.e} ${s.n}</b><small>${s.d}</small></div>
+        <input type="range" min="0" max="1" step="0.05" value="${vols[s.id]}" data-vol="${s.id}" aria-label="Volume de ${s.n}"></div>`).join("")}</div></div>
+    <div class="section"><h2 class="label">Desligar sozinho</h2><div class="chips">${[0,15,30,60].map(m => `<button class="chip" aria-pressed="${m===0?!sleepEnd:false}" data-a="sleep" data-id="${m}">${m?m+" min":"Sem timer"}</button>`).join("")}</div></div>
+    <div class="section"><div class="between"><h2 class="label">Minhas misturas</h2><button class="btn sm ghost" data-a="saveMix">Salvar a atual</button></div>
+      ${mixes.length ? `<div class="list">${mixes.map((m,i) => `<div class="setting"><span class="ic c-lav">★</span><span class="t"><b>${esc(m.n)}</b><small>${Object.keys(m.mix).map(id => SOUNDS.find(s => s.id===id).n).join(" + ")}</small></span><button class="btn sm" data-a="playMix" data-id="${i}">Tocar</button><button class="btn sm ghost" data-a="delMix" data-id="${i}" aria-label="Apagar mistura">✕</button></div>`).join("")}</div>`
+        : `<p class="empty">Ligue um ou mais sons, ajuste o volume e toque em “Salvar a atual”.</p>`}</div>
+    <p class="note"><span aria-hidden="true">🎵</span><span>Na versão final, esta área também terá playlists de músicas licenciadas. Os sons acima são gerados no próprio aparelho.</span></p>
+  </section>`;
+}
+A.snd = el => { const id = el.dataset.id; if(playing[id]) stopSound(id); else startSound(id); rerender(); };
+A.stopAll = () => { stopAll(); rerender(); };
+A.preset = el => { const p = PRESETS[+el.dataset.id]; stopAll(); Object.entries(p.mix).forEach(([id,v]) => { vols[id] = v; startSound(id); }); save("vols", vols); if(p.timer) setSleep(p.timer); rerender(); toast("Tocando: " + p.n + "."); };
+A.playMix = el => { const m = mixes[+el.dataset.id]; stopAll(); Object.entries(m.mix).forEach(([id,v]) => { vols[id] = v; startSound(id); }); save("vols", vols); rerender(); };
+A.delMix = el => { mixes.splice(+el.dataset.id,1); save("mixes", mixes); rerender(); };
+A.saveMix = () => {
+  if(!Object.keys(playing).length) return toast("Ligue pelo menos um som primeiro.");
+  openSheet(`<h2>Salvar mistura</h2><div class="field"><label for="mx-n">Nome</label><input id="mx-n" maxlength="30" placeholder="Ex.: Ônibus lotado"></div>
+    <div class="btns"><button class="btn ghost" data-a="closeSheet">Cancelar</button><button class="btn solid" data-a="saveMixOk">Salvar</button></div>`);
+};
+A.saveMixOk = () => { const n = $("#mx-n").value.trim() || "Minha mistura"; const mix = {}; Object.keys(playing).forEach(id => mix[id] = vols[id]); mixes.push({n, mix}); save("mixes", mixes); closeSheet(); rerender(); toast("Mistura salva."); };
+function setSleep(m){ clearTimeout(sleepT); sleepT = null; sleepEnd = 0; if(m){ sleepEnd = Date.now() + m*60000; sleepT = setTimeout(() => { stopAll(); if(current === "bem-estar") rerender(); }, m*60000); } }
+A.sleep = el => { setSleep(+el.dataset.id); rerender(); };
+document.addEventListener("input", e => { const id = e.target.dataset && e.target.dataset.vol; if(!id) return; vols[id] = +e.target.value; save("vols", vols); if(playing[id]) playing[id].g.gain.setTargetAtTime(vols[id], AC.currentTime, .1); });
+/* respiração */
+const PATTERNS = [
+  {n:"Calma (4 · 6)", ph:[["Inspire",4,1],["Solte o ar",6,.6]]},
+  {n:"Quadrada (4 · 4 · 4 · 4)", ph:[["Inspire",4,1],["Segure",4,1],["Solte o ar",4,.6],["Segure",4,.6]]},
+  {n:"Suspiro (2 · 1 · 6)", ph:[["Inspire",2,.9],["Mais um pouco",1,1],["Solte devagar",6,.6]]}
+];
+let BR = null, brPat = 0;
+function stopBreath(){ if(BR){ clearTimeout(BR.t); clearInterval(BR.iv); BR = null; } }
+A.breath = () => { closeSheet(); renderBreath(); };
+function renderBreath(){
+  stopBreath();
+  openFull(`<div class="between"><h2>Respirar</h2><button class="btn ghost" data-a="closeFull">Fechar</button></div>
+    <div class="chips">${PATTERNS.map((p,i) => `<button class="chip" aria-pressed="${i===brPat}" data-a="brPat" data-id="${i}">${p.n}</button>`).join("")}</div>
+    <div class="orb-wrap"><div class="orb" id="orb"><div><b id="br-ph">Pronto?</b><span id="br-n"></span></div></div></div>
+    <p class="sub" id="br-r" style="text-align:center">Siga o círculo e a contagem. Ciclos: 0</p>
+    <button class="btn solid block" data-a="brToggle" id="br-btn">Começar</button>`);
+}
+A.brPat = el => { brPat = +el.dataset.id; renderBreath(); };
+A.brToggle = () => {
+  if(BR){ stopBreath(); $("#br-btn").textContent = "Começar"; $("#br-ph").textContent = "Pausado"; $("#br-n").textContent = ""; $("#orb").style.transform = "scale(.6)"; return; }
+  $("#br-btn").textContent = "Parar"; const pat = PATTERNS[brPat]; BR = {k:0, cycles:0};
+  const step = () => { if(!BR || !$("#orb")) return stopBreath();
+    const [t, sec, sc] = pat.ph[BR.k], orb = $("#orb");
+    orb.style.transitionDuration = sec + "s"; orb.style.transform = `scale(${sc})`;
+    $("#br-ph").textContent = t; let n = sec; $("#br-n").textContent = n; clearInterval(BR.iv);
+    BR.iv = setInterval(() => { n--; if(n > 0 && $("#br-n")) $("#br-n").textContent = n; }, 1000);
+    BR.k = (BR.k + 1) % pat.ph.length; if(BR.k === 0) BR.cycles++;
+    const r = $("#br-r"); if(r) r.textContent = "Siga o círculo e a contagem. Ciclos: " + BR.cycles;
+    BR.t = setTimeout(step, sec*1000); };
+  step();
+};
+/* 5-4-3-2-1 */
+const GROUND = [["👀",5,"coisas que você consegue ver","Olhe ao redor devagar. Pode dizer em voz alta ou só pensar."],["✋",4,"coisas que você pode tocar","Sinta a textura: a roupa, a mesa, o chão sob os pés."],["👂",3,"sons que você ouve","Perto ou longe. Não precisa gostar deles, só perceber."],["👃",2,"cheiros que você sente","Se não sentir nenhum, lembre de um cheiro de que você gosta."],["👅",1,"sabor ou algo bom sobre você","Pode ser o gosto na boca ou uma qualidade sua."]];
+let GI = 0;
+A.ground = () => { closeSheet(); GI = 0; renderGround(); };
+function renderGround(){
+  const g = GROUND[GI], last = GI === GROUND.length-1;
+  openFull(`<div class="between"><span class="stepcount">Exercício 5-4-3-2-1 · Passo ${GI+1} de 5</span><button class="btn sm ghost" data-a="closeFull">Sair</button></div>
+    ${progHTML(5, GI)}
+    <div class="guide-card c-sage"><span class="big-e" aria-hidden="true">${g[0]}</span><b>${g[1]} ${g[2]}</b><p>${g[3]}</p></div>
+    <button class="btn ghost block" data-a="say" data-id="${g[1]} ${g[2]}. ${g[3]}">${IC.speak}Ouvir</button>
+    <div class="btns"><button class="btn ghost" data-a="gNav" data-id="-1" ${GI===0?"disabled":""}>Voltar</button>${last?`<button class="btn solid" data-a="closeFull">Terminei</button>`:`<button class="btn solid" data-a="gNav" data-id="1">Próximo</button>`}</div>`);
+}
+A.gNav = el => { GI = Math.max(0, Math.min(4, GI + +el.dataset.id)); renderGround(); };
+
+/* =========================================================
+   PROFISSIONAIS (perfis fictícios)
+   ========================================================= */
+const PROS = [
+  {id:"p1", ini:"MC", c:"c-lav", n:"Marina Costa", role:"Psicóloga", area:"Psicologia", city:"São Paulo, SP", mode:["Online"], tags:["Neuroafirmativa","Sessão por texto","Adultos"],
+   about:"Atendo adultos autistas e com TDAH, com foco em autoconhecimento e redução de sobrecarga.", adapt:["Sessões por chat ou vídeo com câmera desligada","Envio a pauta da sessão antes, por escrito","Pausas sempre que você pedir"], space:"Atendimento só online.", form:"Psicologia (registro fictício). Especialização em neurodiversidade.", price:"R$ 120 a R$ 160", slots:{"Seg":["18:00"],"Qui":["14:00","16:00"],"Sex":["10:00"]}},
+  {id:"p2", ini:"RA", c:"c-peach", n:"Rafael Alves", role:"Terapeuta ocupacional", area:"Terapia ocupacional", city:"Campinas, SP", mode:["Presencial"], tags:["Integração sensorial","Sala com pouca luz","Crianças e adultos"],
+   about:"Trabalho com regulação sensorial e autonomia nas tarefas do dia a dia.", adapt:["Sala com luz regulável e sem cheiros fortes","Mostro o consultório por fotos antes da primeira visita","Horários com a recepção vazia"], space:"Térreo, sem degraus, sala silenciosa.", form:"Terapia ocupacional (registro fictício).", price:"R$ 150", slots:{"Seg":["09:00","11:00"],"Qua":["15:00"]}},
+  {id:"p3", ini:"JS", c:"c-sky", n:"Jô Santos", role:"Fonoaudiologia · CAA", area:"Fonoaudiologia", city:"Recife, PE", mode:["Online","Presencial"], tags:["Comunicação alternativa","Libras","Neuroafirmativa"],
+   about:"Ajudo pessoas e famílias a montar sistemas de comunicação alternativa que façam sentido para cada um.", adapt:["Atendimento em Libras","Uso de cards e pranchas na sessão","Você escolhe se quer falar, escrever ou apontar"], space:"Consultório com sala de espera silenciosa.", form:"Fonoaudiologia (registro fictício). Formação em CAA.", price:"R$ 130", slots:{"Qua":["16:00"],"Qui":["09:00","10:00"]}},
+  {id:"p4", ini:"LP", c:"c-sage", n:"Luiza Prado", role:"Psiquiatra", area:"Psiquiatria", city:"Belo Horizonte, MG", mode:["Online","Presencial"], tags:["TDAH","Adultos","Neuroafirmativa"],
+   about:"Avaliação e acompanhamento de TDAH e autismo em adultos, com decisões compartilhadas.", adapt:["Resumo escrito ao fim de cada consulta","Pode levar acompanhante","Explico cada opção de tratamento com calma"], space:"Prédio com elevador. Sala com poltrona de balanço.", form:"Medicina e psiquiatria (registro fictício).", price:"R$ 300", slots:{"Ter":["08:00","13:00"],"Sex":["17:00"]}},
+  {id:"p5", ini:"TN", c:"c-rose", n:"Tadeu Nunes", role:"Psicopedagogo", area:"Psicopedagogia", city:"Curitiba, PR", mode:["Online"], tags:["Estudos","Dislexia","Adolescentes"],
+   about:"Estratégias de estudo para quem aprende de um jeito diferente.", adapt:["Material com fonte ampliada e fundo colorido","Sessões curtas de 30 minutos","Atividades práticas em vez de leitura longa"], space:"Atendimento só online.", form:"Pedagogia e psicopedagogia (registro fictício).", price:"R$ 90", slots:{"Seg":["15:00"],"Ter":["15:00"],"Qui":["15:00"]}},
+  {id:"p6", ini:"AB", c:"c-butter", n:"Ana Beatriz Lima", role:"Nutricionista", area:"Nutrição", city:"Salvador, BA", mode:["Presencial"], tags:["Seletividade alimentar","Sem julgamento","Crianças e adultos"],
+   about:"Acompanho seletividade alimentar respeitando texturas, cheiros e preferências sensoriais.", adapt:["Nada de pressão para provar alimentos","Plano visual com fotos das refeições","A consulta pode ser em ambiente externo"], space:"Consultório arejado, com janela.", form:"Nutrição (registro fictício).", price:"R$ 140", slots:{"Qua":["09:00","14:00"],"Sex":["09:00"]}}
+];
+const PFILTERS = ["Online","Presencial","Neuroafirmativa","Libras","Comunicação alternativa","Sala com pouca luz","Sessão por texto"];
+let pTab = "busca", pQ = "", pF = [], pArea = "";
+let proFavs = load("proFavs", []), appts = load("appts", []);
+const findPro = id => PROS.find(p => p.id === id);
+function proMatch(p){
+  const hay = (p.n+" "+p.role+" "+p.area+" "+p.city+" "+p.tags.join(" ")+" "+p.mode.join(" ")).toLowerCase();
+  return (!pQ || hay.includes(pQ.toLowerCase())) && (!pArea || p.area === pArea) && pF.every(f => hay.includes(f.toLowerCase()));
+}
+function proCard(p){ const on = proFavs.includes(p.id);
+  return `<article class="pro"><div class="top"><div class="avatar ${p.c}">${p.ini}</div><div class="who"><b>${p.n}</b><small>${p.role}</small><small>${p.mode.join(" e ")} · ${p.city}</small></div>
+    <button class="favbtn" data-a="proFav" data-id="${p.id}" aria-pressed="${on}" aria-label="${on?"Tirar dos favoritos":"Salvar nos favoritos"}">${on?"★":"☆"}</button></div>
+    <div class="tags">${p.tags.map(t => `<span class="tag c-sage">${t}</span>`).join("")}</div>
+    <p class="adapt"><b>Como adapta:</b> ${p.adapt[0]}.</p>
+    <div class="btns"><button class="btn ghost" data-a="proOpen" data-id="${p.id}">Ver perfil</button><button class="btn" data-a="book" data-id="${p.id}">Agendar</button></div></article>`; }
+function renderPro(){
+  let body = "";
+  const active = appts.filter(a => a.st !== "cancel").length;
+  if(pTab === "busca"){
+    const list = PROS.filter(proMatch);
+    body = `<label class="search"><span aria-hidden="true">🔎</span><input id="pro-q" placeholder="Buscar por nome, área ou cidade" value="${esc(pQ)}" aria-label="Buscar profissionais"></label>
+      <div class="field"><label for="pro-area">Especialidade</label><select id="pro-area"><option value="">Todas</option>${[...new Set(PROS.map(p => p.area))].map(a => `<option ${a===pArea?"selected":""}>${a}</option>`).join("")}</select></div>
+      <div class="chips" role="group" aria-label="Filtros">${PFILTERS.map(f => `<button class="chip" aria-pressed="${pF.includes(f)}" data-a="pFilter" data-id="${f}">${f}</button>`).join("")}</div>
+      <p class="sub" style="font-size:14px">${list.length} ${list.length===1?"profissional encontrado":"profissionais encontrados"}</p>
+      <div class="list">${list.length ? list.map(proCard).join("") : `<p class="empty">Ninguém com esses filtros. Tente tirar algum.</p>`}</div>`;
+  } else if(pTab === "favs"){
+    const list = PROS.filter(p => proFavs.includes(p.id));
+    body = `<div class="list">${list.length ? list.map(proCard).join("") : `<p class="empty">Toque na estrela de um perfil para salvar aqui.</p>`}</div>`;
+  } else {
+    body = `<div class="list">${appts.length ? appts.slice().reverse().map(a => { const p = findPro(a.pro); return `<div class="appt">
+      <div class="between"><b>${p.n}</b><span class="tag ${a.st==="cancel"?"c-rose":"c-butter"}">${a.st==="cancel"?"Cancelado":"Aguardando confirmação"}</span></div>
+      <span class="sub" style="font-size:14px">${a.day} às ${a.time} · ${a.mode}</span>
+      ${a.ad.length?`<span style="font-size:14px">Adaptações pedidas: ${a.ad.map(esc).join(", ")}</span>`:""}
+      ${a.st!=="cancel"?`<div class="btns"><button class="btn sm ghost" data-a="proOpen" data-id="${p.id}">Ver perfil</button><button class="btn sm warn" data-a="apptCancel" data-id="${a.id}">Cancelar</button></div>`:""}</div>`; }).join("") : `<p class="empty">Você ainda não pediu nenhum agendamento.</p>`}</div>`;
+  }
+  $("#view").innerHTML = `<section class="screen">
+    <a class="back" href="#inicio">← Início</a>
+    <div class="head"><h1>Profissionais</h1><p class="sub">Cada perfil conta como a pessoa adapta o atendimento. Os perfis são fictícios.</p></div>
+    <div class="seg" role="tablist">${[["busca","Buscar"],["favs","Favoritos"],["agenda","Agenda"+(active?" ("+active+")":"")]].map(t => `<button role="tab" aria-selected="${pTab===t[0]}" data-a="pTab" data-id="${t[0]}">${t[1]}</button>`).join("")}</div>
+    ${body}</section>`;
+  const q = $("#pro-q"); if(q){ q.addEventListener("input", () => { pQ = q.value; const pos = q.selectionStart; rerender(); const n = $("#pro-q"); n.focus(); n.setSelectionRange(pos,pos); }); }
+  const s = $("#pro-area"); if(s) s.addEventListener("change", () => { pArea = s.value; rerender(); });
+}
+A.pTab = el => { pTab = el.dataset.id; rerender(); };
+A.pFilter = el => { const f = el.dataset.id, i = pF.indexOf(f); if(i >= 0) pF.splice(i,1); else pF.push(f); rerender(); };
+A.proFav = el => { const id = el.dataset.id, i = proFavs.indexOf(id); if(i >= 0) proFavs.splice(i,1); else proFavs.push(id); save("proFavs", proFavs); if(!$("#full").hidden) A.proOpen(el); rerender(); };
+A.proOpen = el => {
+  const p = findPro(el.dataset.id), on = proFavs.includes(p.id);
+  openFull(`<div class="between"><button class="btn sm ghost" data-a="closeFull">← Voltar</button><button class="btn sm ghost" data-a="proFav" data-id="${p.id}">${on?"★ Salvo":"☆ Salvar"}</button></div>
+    <div class="pro" style="box-shadow:none;padding:0;background:none"><div class="top"><div class="avatar ${p.c}" style="width:68px;height:68px;font-size:24px">${p.ini}</div><div class="who"><b style="font-size:22px">${p.n}</b><small>${p.role}</small><small>${p.mode.join(" e ")} · ${p.city}</small></div></div>
+    <div class="tags">${p.tags.map(t => `<span class="tag c-sage">${t}</span>`).join("")}</div></div>
+    <div class="panel"><h2>Sobre</h2><p>${p.about}</p></div>
+    <div class="panel"><h2>Como adapto o atendimento</h2><ul class="plain">${p.adapt.map(x => `<li>${x}</li>`).join("")}</ul></div>
+    <div class="panel"><h2>Informações</h2><dl class="kv"><dt>Espaço</dt><dd>${p.space}</dd><dt>Formação</dt><dd>${p.form}</dd><dt>Valor</dt><dd>${p.price} por sessão</dd></dl></div>
+    <div class="panel"><h2>Próximos horários</h2>${Object.entries(p.slots).map(([d,hs]) => `<div class="between"><b>${d}</b><span class="slots">${hs.map(h => `<span class="tag c-sky">${h}</span>`).join("")}</span></div>`).join("")}</div>
+    <button class="btn solid block" data-a="book" data-id="${p.id}">Solicitar agendamento</button>`);
+};
+let B = null;
+const BSTEPS = ["Como prefere ser atendido(a/e)?","Escolha dia e horário","Adaptações que ajudam você","Confira e envie"];
+const BADAPT = ["Comunicação por texto","Luz baixa","Sem contato visual obrigatório","Pausas durante a sessão","Levar acompanhante","Receber resumo por escrito","Sala de espera silenciosa"];
+A.book = el => { const p = findPro(el.dataset.id); B = {p, i:0, mode:p.mode[0], day:"", time:"", ad:[], note:""}; renderBook(); };
+function renderBook(){
+  const {p, i} = B; let body = "";
+  if(i === 0) body = `<div class="list">${p.mode.map(m => `<button class="setting" data-a="bMode" data-id="${m}" style="${B.mode===m?"box-shadow:inset 0 0 0 2px var(--lav-ink)":""}"><span class="ic ${m==="Online"?"c-sky":"c-peach"}">${m==="Online"?"💻":"🏠"}</span><span class="t"><b>${m}</b><small>${m==="Online"?"Por vídeo, áudio ou texto":p.space}</small></span>${B.mode===m?"✓":""}</button>`).join("")}</div>`;
+  if(i === 1) body = Object.entries(p.slots).map(([d,hs]) => `<div class="section"><b>${d}</b><div class="chips">${hs.map(h => `<button class="chip" aria-pressed="${B.day===d&&B.time===h}" data-a="bSlot" data-d="${d}" data-id="${h}">${h}</button>`).join("")}</div></div>`).join("");
+  if(i === 2) body = `<p class="sub">Escolha o que quiser. A pessoa recebe junto com o pedido.</p><div class="chips">${BADAPT.map(x => `<button class="chip" aria-pressed="${B.ad.includes(x)}" data-a="bAd" data-id="${x}">${x}</button>`).join("")}</div>
+    <div class="field"><label for="b-note">Algo mais que queira contar (opcional)</label><textarea id="b-note" placeholder="Ex.: Prefiro receber mensagem em vez de ligação.">${esc(B.note)}</textarea></div>`;
+  if(i === 3) body = `<div class="panel"><dl class="kv"><dt>Com</dt><dd>${p.n}</dd><dt>Como</dt><dd>${B.mode}</dd><dt>Quando</dt><dd>${B.day} às ${B.time}</dd><dt>Adaptações</dt><dd>${B.ad.length?B.ad.join(", "):"Nenhuma"}</dd>${B.note?`<dt>Recado</dt><dd>${esc(B.note)}</dd>`:""}</dl></div>
+    <p class="note">${IC.lock}<span>Seu diário não é enviado. Só vão as informações acima.</span></p>`;
+  const can = i !== 1 || B.time;
+  openFull(`<div class="between"><span class="stepcount">Agendar com ${p.n} · Passo ${i+1} de 4</span><button class="btn sm ghost" data-a="closeFull">Cancelar</button></div>
+    ${progHTML(4, i)}
+    <h2>${BSTEPS[i]}</h2>${body}<div style="flex:1"></div>
+    <div class="btns"><button class="btn ghost" data-a="bNav" data-id="-1" ${i===0?"disabled":""}>Voltar</button>${i<3?`<button class="btn solid" data-a="bNav" data-id="1" ${can?"":"disabled"}>Próximo</button>`:`<button class="btn solid" data-a="bSend">Enviar pedido</button>`}</div>`);
+}
+const bNote = () => { const n = $("#b-note"); if(n) B.note = n.value.trim(); };
+A.bMode = el => { B.mode = el.dataset.id; renderBook(); };
+A.bSlot = el => { B.day = el.dataset.d; B.time = el.dataset.id; renderBook(); };
+A.bAd = el => { bNote(); const i = B.ad.indexOf(el.dataset.id); if(i >= 0) B.ad.splice(i,1); else B.ad.push(el.dataset.id); renderBook(); };
+A.bNav = el => { bNote(); B.i = Math.max(0, Math.min(3, B.i + +el.dataset.id)); renderBook(); };
+A.bSend = () => { appts.push({id:"ap"+Date.now(), pro:B.p.id, mode:B.mode, day:B.day, time:B.time, ad:B.ad, note:B.note, st:"pending"}); save("appts", appts); B = null; closeFull(); pTab = "agenda"; if(current !== "profissionais") location.hash = "profissionais"; else rerender(); toast("Pedido enviado (simulado). A confirmação aparece na Agenda."); };
+A.apptCancel = el => {
+  if(el.dataset.confirm !== "1"){ el.dataset.confirm = "1"; el.textContent = "Toque de novo para cancelar"; return; }
+  appts.find(a => a.id === el.dataset.id).st = "cancel"; save("appts", appts); rerender(); toast("Agendamento cancelado.");
+};
+
+/* =========================================================
+   PERFIL E CONFIGURAÇÕES
+   ========================================================= */
+function accessHTML(){
+  const z = S.prefs.z;
+  return `<div class="field"><span class="flabel">Tamanho do texto</span><div class="seg">${[[.9,"Menor"],[1,"Padrão"],[1.15,"Maior"],[1.3,"Bem maior"]].map(o => `<button aria-pressed="${z===o[0]}" data-a="prefZ" data-id="${o[0]}">${o[1]}</button>`).join("")}</div></div>
+    <div class="field"><span class="flabel">Tema</span><div class="seg">${[["auto","Automático"],["light","Claro"],["dark","Escuro"]].map(o => `<button aria-pressed="${S.prefs.theme===o[0]}" data-a="prefTheme" data-id="${o[0]}">${o[1]}</button>`).join("")}</div></div>
+    ${toggleHTML("pref-contrast", S.prefs.contrast, "Alto contraste", "Textos e bordas mais fortes")}
+    ${toggleHTML("pref-motion", S.prefs.motion, "Reduzir animações", "Menos movimento na tela")}
+    <div class="field"><span class="flabel">Velocidade da voz</span><div class="seg">${[[.75,"Devagar"],[.95,"Normal"],[1.15,"Rápida"]].map(o => `<button aria-pressed="${S.prefs.rate===o[0]}" data-a="prefRate" data-id="${o[0]}">${o[1]}</button>`).join("")}</div></div>`;
+}
+const modulesHTML = () => `<div class="list">${MODS.map(m => toggleHTML("mod-"+m.k, S.modules[m.k], m.name, m.desc)).join("")}</div>`;
+const refreshPrefs = () => { persist(); applyPrefs(); if(!$("#onb").hidden) renderOnb(); else if($("#sheet").dataset.kind === "access") A.setAccess(); };
+A.prefZ = el => { S.prefs.z = +el.dataset.id; refreshPrefs(); };
+A.prefTheme = el => { S.prefs.theme = el.dataset.id; refreshPrefs(); };
+A.prefRate = el => { S.prefs.rate = +el.dataset.id; refreshPrefs(); speak("Assim fica a velocidade da voz."); };
+TOGS["pref-contrast"] = v => { S.prefs.contrast = v; persist(); applyPrefs(); };
+TOGS["pref-motion"] = v => { S.prefs.motion = v; persist(); applyPrefs(); };
+MODS.forEach(m => TOGS["mod-"+m.k] = (v, el) => {
+  S.modules[m.k] = v;
+  if(!Object.values(S.modules).some(Boolean)){ S.modules[m.k] = true; el.setAttribute("aria-checked","true"); toast("Deixe pelo menos um módulo ligado."); }
+  persist(); renderNav();
+});
+TOGS["n-rotina"] = v => { S.notif.rotina = v; persist(); };
+TOGS["n-diario"] = v => { S.notif.diario = v; persist(); };
+TOGS["n-consultas"] = v => { S.notif.consultas = v; persist(); };
+TOGS["pv-home"] = v => { S.privacy.homePreview = v; persist(); };
+TOGS["pv-lock"] = v => { S.privacy.lockDiary = v; diaryUnlocked = false; persist(); };
+
+function renderPerfil(){
+  $("#view").innerHTML = `<section class="screen">
+    <div class="head"><h1>Perfil</h1></div>
+    <div class="profile-card"><span class="av" aria-hidden="true">${S.profile.avatar}</span><div style="flex:1;min-width:0"><b style="font-family:var(--f-display);font-size:20px">${esc(S.profile.name || "Sem nome")}</b><p class="sub" style="overflow-wrap:anywhere">${esc(S.profile.email || "Sem e-mail")}</p></div><button class="btn sm ghost" data-a="editProfile">Editar</button></div>
+    <div class="list">
+      <button class="setting" data-a="setAccess"><span class="ic c-lav">Aa</span><span class="t"><b>Acessibilidade</b><small>Texto, tema, contraste, animações e voz</small></span>›</button>
+      <button class="setting" data-a="setModules"><span class="ic c-peach">▦</span><span class="t"><b>Meus módulos</b><small>Escolha o que aparece no app</small></span>›</button>
+      <button class="setting" data-a="setPrivacy"><span class="ic c-sage">🔒</span><span class="t"><b>Privacidade</b><small>Seus dados e o que você compartilha</small></span>›</button>
+      <button class="setting" data-a="setNotif"><span class="ic c-sky">🔔</span><span class="t"><b>Notificações</b><small>Lembretes opcionais e horário de silêncio</small></span>›</button>
+      <button class="setting" data-a="setSecurity"><span class="ic c-rose">🔑</span><span class="t"><b>Segurança</b><small>Senha e conta</small></span>›</button>
+      <button class="setting" data-a="setHelp"><span class="ic c-butter">?</span><span class="t"><b>Ajuda</b><small>Passo a passo de cada parte do app</small></span>›</button>
+    </div>
+    <p class="sub" style="text-align:center;font-size:13px">Protótipo Your Friend You · os dados ficam só neste navegador</p>
+  </section>`;
+}
+A.editProfile = () => openSheet(`<h2>Editar perfil</h2>
+  <div class="field"><label for="ep-n">Nome ou apelido</label><input id="ep-n" maxlength="30" value="${esc(S.profile.name)}"></div>
+  <div class="field"><span class="flabel">Seu ícone</span>${pickerHTML("ep-av", S.profile.avatar)}</div>
+  <div class="btns"><button class="btn ghost" data-a="closeSheet">Cancelar</button><button class="btn solid" data-a="saveProfile">Salvar</button></div>`);
+A.saveProfile = () => { S.profile.name = $("#ep-n").value.trim(); S.profile.avatar = picked("ep-av", "🌱"); persist(); applyPrefs(); closeSheet(); rerender(); toast("Perfil salvo."); };
+A.setAccess = () => { openSheet(`<h2>Acessibilidade</h2><p class="sub">As mudanças aparecem na hora.</p>${accessHTML()}<button class="btn ghost" data-a="say" data-id="Este é um teste da voz do Your Friend You.">${IC.speak}Testar voz</button><button class="btn solid block" data-a="closeSheet">Pronto</button>`); $("#sheet").dataset.kind = "access"; };
+A.setModules = () => openSheet(`<h2>Meus módulos</h2><p class="sub">Desligar um módulo só esconde. Nada é apagado.</p>${modulesHTML()}<button class="btn solid block" data-a="closeSheet">Pronto</button>`, () => rerender());
+A.setPrivacy = () => openSheet(`<h2>Privacidade</h2>
+  <p class="note">${IC.lock}<span>Diário, cards e rotina ficam neste aparelho. Nada é compartilhado sem você escolher, registro por registro.</span></p>
+  ${toggleHTML("pv-lock", S.privacy.lockDiary, "Pedir desbloqueio para abrir o diário", "Na versão final, usa a senha ou a digital do aparelho")}
+  ${toggleHTML("pv-home", S.privacy.homePreview, "Mostrar o último registro do diário no início", "Desligado: ninguém vê seus registros na tela inicial")}
+  <div class="panel"><h2>Registros compartilháveis</h2><p class="sub">${diary.filter(e => e.share).length} de ${diary.length} registros estão liberados. Você muda isso abrindo cada registro no diário.</p></div>
+  <button class="btn warn block" data-a="wipe">Apagar todos os meus dados</button>
+  <button class="btn ghost block" data-a="closeSheet">Fechar</button>`, () => rerender());
+A.wipe = el => {
+  if(el.dataset.confirm !== "1"){ el.dataset.confirm = "1"; el.textContent = "Isso apaga tudo. Toque de novo para confirmar."; return; }
+  try{ Object.keys(localStorage).filter(k => k.indexOf("yfy:") === 0).forEach(k => localStorage.removeItem(k)); }catch(e){}
+  stopAll(); location.hash = "inicio"; location.reload();
+};
+A.setNotif = () => openSheet(`<h2>Notificações</h2><p class="sub">Todas são opcionais. Nenhuma mensagem cobra tarefas não feitas.</p>
+  ${toggleHTML("n-rotina", S.notif.rotina, "Lembretes da rotina", "Só nas atividades em que você ligou o lembrete")}
+  ${toggleHTML("n-diario", S.notif.diario, "Convite para escrever no diário", "Um aviso gentil por dia")}
+  <div class="field"><label for="n-dh">Horário do convite</label><input id="n-dh" type="time" value="${S.notif.diarioHora}"></div>
+  ${toggleHTML("n-consultas", S.notif.consultas, "Consultas", "Confirmações e lembretes de agendamentos")}
+  <div class="two"><div class="field"><label for="n-sd">Silêncio a partir de</label><input id="n-sd" type="time" value="${S.notif.silencioDe}"></div><div class="field"><label for="n-sa">até</label><input id="n-sa" type="time" value="${S.notif.silencioAte}"></div></div>
+  <button class="btn solid block" data-a="saveNotif">Salvar</button>`);
+A.saveNotif = () => { S.notif.diarioHora = $("#n-dh").value; S.notif.silencioDe = $("#n-sd").value; S.notif.silencioAte = $("#n-sa").value; persist(); closeSheet(); toast("Notificações salvas."); };
+A.setSecurity = () => openSheet(`<h2>Segurança</h2>
+  <div class="field"><label for="sc-a">Senha atual</label><input id="sc-a" type="password" autocomplete="current-password"></div>
+  <div class="field"><label for="sc-n">Nova senha</label><input id="sc-n" type="password" autocomplete="new-password"><small>Pelo menos 6 caracteres.</small></div>
+  <p class="err" id="sc-err" hidden></p>
+  <button class="btn solid block" data-a="changePass">Trocar senha</button>
+  <button class="btn ghost block" data-a="logout">Sair da conta</button>`);
+A.changePass = () => { const e = $("#sc-err"); if(!$("#sc-a").value || $("#sc-n").value.length < 6){ e.textContent = "Preencha a senha atual e uma nova com pelo menos 6 caracteres."; e.hidden = false; return; } closeSheet(); toast("Senha trocada (simulado)."); };
+A.logout = () => { closeSheet(); stopAll(); S.profile.logged = false; persist(); onbMode = "login"; renderOnb(); };
+const HELP = [
+  ["💬 Como montar uma frase", ["Abra Comunicação na barra de baixo.","Escolha uma categoria, como Necessidades.","Toque nos cards na ordem da frase. Ex.: Eu, quero, água.","Toque em Falar para ouvir ou em Mostrar para exibir em tela cheia.","Errou? Toque no botão de apagar para tirar o último card."]],
+  ["ℹ️ Como ver o que um card significa", ["Toque no i no canto do card.","Leia o significado, o que a voz diz e um exemplo de uso.","Toque em Ouvir ou em Adicionar à frase.","Ao tocar num card, o significado também aparece embaixo da frase."]],
+  ["＋ Como criar um card", ["Em Comunicação, toque em Criar card no fim da lista.","Escreva o texto, o que a voz deve falar e o significado.","Escolha um emoji ou uma foto sua.","Toque em Salvar card."]],
+  ["🗓️ Como fazer uma atividade passo a passo", ["Abra Organização e escolha o período.","Toque na atividade.","Toque em Passo a passo.","Siga uma etapa por vez e toque em Próximo.","No fim, toque em Concluir atividade."]],
+  ["🔄 E se eu não conseguir fazer algo?", ["Toque na atividade.","Escolha Deixar para depois ou Hoje não.","Nada é cobrado. Você pode recomeçar o dia quando quiser."]],
+  ["📖 Como escrever no Meu espaço", ["Abra Meu espaço e toque em Registro guiado ou em Escrever ou falar.","Passe pelas 5 etapas. Todas podem ser puladas.","Na última, decida se o registro pode ser compartilhado.","Toque em Salvar registro."]],
+  ["🎧 Como usar os sons", ["Na tela inicial, abra Bem-estar sensorial.","Toque no play de um ou mais sons.","Ajuste o volume de cada um.","Se quiser, escolha um tempo para desligar sozinho."]],
+  ["📥 Como guardar uma ideia rápida", ["Na tela inicial, toque em Capturar algo.","Escreva ou toque em Falar.","Toque em Guardar.","Depois, em Organização, abra a Caixa de entrada e transforme em tarefa ou registro."]],
+  ["🔄 Como reorganizar o dia", ["Em Organização, toque em Reorganizar meu dia.","Para cada item, escolha manter, mais tarde, amanhã, sem horário ou remover.","Toque em Aplicar. Se mudar de ideia, toque em Desfazer."]],
+  ["🫶 Como usar o plano de apoio", ["Abra Autorregulação pela tela inicial.","Crie um plano para um lugar, como universidade ou transporte.","Para cada situação, escreva o que ajuda e escolha um recurso do app.","Quando precisar, toque em Meu plano de apoio e escolha a situação."]],
+  ["🤝 Como agendar com um profissional", ["Abra Rede de apoio pela tela inicial.","Use a busca e os filtros.","Toque em Agendar e siga os 4 passos.","Acompanhe o pedido na aba Agenda."]]
+];
+A.setHelp = () => openSheet(`<h2>Ajuda</h2><p class="sub">Toque num tema para ver o passo a passo.</p>
+  ${HELP.map(h => `<details class="guide"><summary>${h[0]}</summary><ol>${h[1].map(x => `<li>${x}</li>`).join("")}</ol></details>`).join("")}
+  <button class="btn ghost block" data-a="replayOnb">Ver as boas-vindas de novo</button>
+  <p class="sub" style="font-size:14px">Precisa de mais ajuda? Na versão final, haverá contato com o suporte por texto.</p>
+  <button class="btn solid block" data-a="closeSheet">Fechar</button>`);
+A.replayOnb = () => { closeSheet(); onbStep = 0; onbSlide = 0; onbMode = "signup"; renderOnb(); };
+
+/* =========================================================
+   ORGANIZAÇÃO: captura rápida, caixa de entrada, lembretes flexíveis,
+   avisos de transição, reorganizar o dia, cuidados cotidianos, modo foco
+   ========================================================= */
+let inbox = load("inbox", []);
+const saveInbox = () => save("inbox", inbox);
+let rec = null;
+A.capture = () => {
+  openSheet(`<h2>Capturar algo</h2><p class="sub">Escreva ou fale. Você decide depois o que fazer com isso.</p>
+    <div class="field"><label for="cap-t">O que você quer guardar?</label><textarea id="cap-t" placeholder="Ex.: comprar pilha para o fone"></textarea></div>
+    <p class="err" id="cap-err" hidden></p>
+    <div class="btns"><button class="btn ghost" data-a="capVoice" id="cap-mic">🎙️ Falar</button><button class="btn solid" data-a="capSave">Guardar</button></div>
+    <p class="note">${IC.lock}<span>Vai para a Caixa de entrada, em Organização. Nada é enviado para fora do aparelho.</span></p>`, () => { if(rec){ try{ rec.stop(); }catch(e){} rec = null; } });
+  setTimeout(() => { const t = $("#cap-t"); if(t) t.focus(); }, 50);
+};
+A.capVoice = el => {
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if(!SR){ toast("A voz não está disponível neste navegador. Você pode digitar."); return; }
+  if(rec){ try{ rec.stop(); }catch(e){} return; }
+  try{
+    rec = new SR(); rec.lang = "pt-BR"; rec.interimResults = false;
+    rec.onresult = e => { const t = $("#cap-t"); if(t){ const txt = Array.from(e.results).map(r => r[0].transcript).join(" "); t.value = (t.value ? t.value + " " : "") + txt; } };
+    rec.onerror = () => toast("Não consegui ouvir. Tente de novo ou digite.");
+    rec.onend = () => { rec = null; const b = $("#cap-mic"); if(b) b.textContent = "🎙️ Falar"; };
+    rec.start(); el.textContent = "● Ouvindo… toque para parar";
+  }catch(e){ rec = null; toast("Não foi possível usar o microfone. Você pode digitar."); }
+};
+A.capSave = () => {
+  const t = $("#cap-t").value.trim();
+  if(!t){ const e = $("#cap-err"); e.textContent = "Escreva ou fale alguma coisa antes de guardar."; e.hidden = false; return; }
+  inbox.unshift({id:"i"+Date.now(), t, d:new Date().toISOString()}); saveInbox(); closeSheet(); rerender(); toast("Guardado na Caixa de entrada.");
+};
+A.inbox = () => {
+  openSheet(`<h2>Caixa de entrada</h2><p class="sub">O que você capturou. Transforme em tarefa, em registro, ou apague quando não precisar mais.</p>
+    ${inbox.length ? `<div class="list">${inbox.map(i => `<div class="panel" style="gap:10px"><span class="stepcount">${fmtDate(i.d)}</span><p>${esc(i.t)}</p>
+      <div class="toolrow"><button class="btn sm" data-a="inTask" data-id="${i.id}">Virar tarefa</button>${S.modules.dia?`<button class="btn sm" data-a="inDiary" data-id="${i.id}">Virar registro</button>`:""}<button class="btn sm ghost" data-a="inDel" data-id="${i.id}">Apagar</button></div></div>`).join("")}</div>`
+      : `<p class="empty">Nada aqui por enquanto. Quando lembrar de algo, toque em Capturar e guarde sem pensar onde.</p>`}
+    <div class="btns"><button class="btn ghost" data-a="closeSheet">Fechar</button><button class="btn solid" data-a="capture">＋ Capturar</button></div>`, () => rerender());
+};
+const takeInbox = id => { const i = inbox.find(x => x.id === id); inbox = inbox.filter(x => x.id !== id); saveInbox(); return i; };
+A.inTask = el => { const i = takeInbox(el.dataset.id); sheetClose = null; A.actEdit({dataset:{}}); const n = $("#na-n"); if(n) n.value = i.t.slice(0, 40); if(i.t.length > 40){ const d = $("#na-d"); if(d) d.value = i.t.slice(0, 80); } };
+A.inDiary = el => { const i = takeInbox(el.dataset.id); diary.push({id:"d"+Date.now(), date:new Date().toISOString(), emo:[], lvl:0, stim:[], text:i.t, strat:[], share:false}); saveDiary(); A.inbox(); toast("Virou um registro no Meu espaço."); };
+A.inDel = el => { takeInbox(el.dataset.id); A.inbox(); toast("Apagado."); };
+
+/* lembrete flexível + aviso de transição */
+const REM_TYPES = [["soft","Som suave"],["vib","Vibração"],["visual","Só visual"]];
+const REM_WHEN = [["on","No horário"],["10","10 min antes"],["win","Numa janela de tempo"]];
+A.actRemind = el => {
+  const a = acts.find(x => x.id === el.dataset.id); const r = a.rem || {type:"soft", when:"on", text:"Quando puder: " + a.n.toLowerCase()};
+  openSheet(`<h2>Lembrete: ${esc(a.n)}</h2><p class="sub">Um lembrete gentil, que você pode adiar sem explicar nada.</p>
+    ${toggleHTML("rem-on", a.remind, "Lembrete ligado", "Respeita o seu horário de silêncio")}
+    <div class="field"><span class="flabel">Como avisar</span><div class="seg" id="rem-type">${REM_TYPES.map(o => `<button aria-pressed="${r.type===o[0]}" data-a="segPick" data-id="${o[0]}">${o[1]}</button>`).join("")}</div></div>
+    <div class="field"><label for="rem-when">Quando</label><select id="rem-when">${REM_WHEN.map(o => `<option value="${o[0]}" ${r.when===o[0]?"selected":""}>${o[1]}</option>`).join("")}</select><small>Na janela, o aviso chega em algum momento entre o horário e uma hora depois.</small></div>
+    <div class="field"><label for="rem-text">Texto do lembrete</label><input id="rem-text" maxlength="80" value="${esc(r.text)}"></div>
+    ${toggleHTML("rem-tr", a.trans, "Aviso de transição", "10 e 2 minutos antes da troca, mostrando o que vem depois")}
+    <div class="btns"><button class="btn ghost" data-a="remPreview" data-id="${a.id}">Ver como chega</button><button class="btn solid" data-a="remSave" data-id="${a.id}">Salvar</button></div>
+    ${a.trans ? `<button class="btn ghost block" data-a="transPreview" data-id="${a.id}">Ver aviso de transição</button>` : ""}`);
+};
+A.segPick = el => { el.parentElement.querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", b === el)); };
+const remCollect = a => { const t = document.querySelector("#rem-type [aria-pressed='true']");
+  a.remind = isOn("rem-on"); a.trans = isOn("rem-tr"); a.rem = {type:t ? t.dataset.id : "soft", when:$("#rem-when").value, text:$("#rem-text").value.trim() || ("Quando puder: " + a.n.toLowerCase())}; saveActs(); };
+A.remSave = el => { const a = acts.find(x => x.id === el.dataset.id); remCollect(a); closeSheet(); rerender(); toast(a.remind ? "Lembrete salvo. No app final ele chega como notificação." : "Lembrete desligado."); };
+A.remPreview = el => {
+  const a = acts.find(x => x.id === el.dataset.id); remCollect(a);
+  openSheet(`<span class="stepcount">Assim o lembrete aparece</span>
+    <div class="notif"><span class="e" aria-hidden="true">${a.e}</span><span><small>Your Friend You · agora</small><b>${esc(a.rem.text)}</b></span></div>
+    <p class="sub">Escolha o que fazer. Nenhuma opção é registrada como falha.</p>
+    <div class="list">
+      <button class="setting" data-a="snooze" data-id="${a.id}" data-k="now"><span class="ic c-sage">▶</span><span class="t"><b>Fazer agora</b></span>›</button>
+      <button class="setting" data-a="snooze" data-id="${a.id}" data-k="15"><span class="ic c-sky">15</span><span class="t"><b>Daqui a 15 minutos</b></span>›</button>
+      <button class="setting" data-a="snooze" data-id="${a.id}" data-k="later"><span class="ic c-butter">⏳</span><span class="t"><b>Mais tarde hoje</b></span>›</button>
+      <button class="setting" data-a="snooze" data-id="${a.id}" data-k="tomorrow"><span class="ic c-lav">🌅</span><span class="t"><b>Amanhã</b></span>›</button>
+      <button class="setting" data-a="snooze" data-id="${a.id}" data-k="free"><span class="ic c-peach">∞</span><span class="t"><b>Deixar sem horário</b></span>›</button>
+    </div>`, () => rerender());
+};
+A.snooze = el => {
+  const a = acts.find(x => x.id === el.dataset.id), k = el.dataset.k; closeSheet();
+  if(k === "now"){ if(a.s && a.s.length){ G = {a, i:0}; renderGuide(); } else { a.st = "done"; saveActs(); rerender(); toast(a.n + ": feito."); } return; }
+  if(k === "15") return toast("Combinado. O lembrete volta em 15 minutos.");
+  if(k === "later") return A.actSet({dataset:{id:a.id, st:"later"}});
+  if(k === "tomorrow") return A.actSet({dataset:{id:a.id, st:"tomorrow"}});
+  if(k === "free"){ a.p = "livre"; a.time = ""; a.st = "todo"; saveActs(); curP = "livre"; rerender(); toast("Foi para Sem horário."); }
+};
+A.transPreview = el => {
+  const a = acts.find(x => x.id === el.dataset.id), pl = periodActs(a.p), nx = pl.slice(pl.indexOf(a)+1).find(x => x.st === "todo");
+  openSheet(`<span class="stepcount">Assim o aviso de transição aparece</span>
+    <div class="notif"><span class="e" aria-hidden="true">⏭️</span><span><small>Your Friend You · em 10 minutos</small><b>${esc(a.n)} está terminando.</b><br>${nx ? `Depois: ${nx.e} ${esc(nx.n)}${nx.time?" às "+nx.time:""}` : "Depois: tempo livre"}</span></div>
+    <p class="sub">É só um aviso, não uma ordem. Se precisar, peça mais tempo.</p>
+    <div class="btns"><button class="btn ghost" data-a="closeSheet">Ok</button><button class="btn solid" data-a="more5">Mais 5 minutos</button></div>`);
+};
+A.more5 = () => { closeSheet(); toast("Mais 5 minutos. Os próximos avisos foram ajustados."); };
+
+/* reorganizar o dia */
+let reorgUndo = null;
+const RO = [["keep","Manter"],["later","Mais tarde"],["tomorrow","Amanhã"],["free","Sem horário"],["del","Remover"]];
+A.reorg = () => {
+  const pend = acts.filter(a => a.st === "todo" || a.st === "later");
+  openSheet(`<h2>Reorganizar meu dia</h2><p class="sub">O dia mudou? Escolha o que fazer com o que falta. Nada é apagado sem você confirmar.</p>
+    ${pend.length ? `<div class="list">${pend.map(a => `<div class="field"><label for="ro-${a.id}">${a.e} ${esc(a.n)} <span class="sub" style="font-size:13px">· ${PERIODS.find(p => p.id === a.p).name}${a.time?" "+a.time:""}</span></label>
+      <select id="ro-${a.id}" data-ro="${a.id}">${RO.map(o => `<option value="${o[0]}">${o[1]}</option>`).join("")}</select></div>`).join("")}</div>
+      <button class="btn ghost block" data-a="roAll">Mover tudo para amanhã</button>
+      <div class="btns"><button class="btn ghost" data-a="closeSheet">Cancelar</button><button class="btn solid" data-a="roApply">Aplicar</button></div>`
+      : `<p class="empty">Não há nada pendente hoje. Aproveite o tempo livre.</p><button class="btn solid block" data-a="closeSheet">Fechar</button>`}`);
+};
+A.roAll = () => document.querySelectorAll("[data-ro]").forEach(s => s.value = "tomorrow");
+A.roApply = () => {
+  reorgUndo = JSON.stringify(acts); const n = {later:0, tomorrow:0, free:0, del:0};
+  document.querySelectorAll("[data-ro]").forEach(sel => {
+    const a = acts.find(x => x.id === sel.dataset.ro), v = sel.value; if(!a || v === "keep") return; n[v]++;
+    if(v === "later") a.st = "later";
+    if(v === "tomorrow") a.st = "tomorrow";
+    if(v === "free"){ a.p = "livre"; a.time = ""; a.st = "todo"; }
+    if(v === "del") acts = acts.filter(x => x !== a);
+  });
+  saveActs();
+  const parts = [n.later && n.later+" para mais tarde", n.tomorrow && n.tomorrow+" para amanhã", n.free && n.free+" sem horário", n.del && n.del+" removido"+(n.del>1?"s":"")].filter(Boolean);
+  openSheet(`<h2>Dia reorganizado</h2><p>${parts.length ? "Ficou assim: " + parts.join(", ") + "." : "Nada mudou. Tudo bem também."}</p><p class="sub">Os lembretes e avisos seguem os itens que você moveu.</p>
+    <div class="btns"><button class="btn ghost" data-a="roUndo">Desfazer</button><button class="btn solid" data-a="closeSheet">Pronto</button></div>`, () => rerender());
+};
+A.roUndo = () => { if(reorgUndo){ acts = JSON.parse(reorgUndo); saveActs(); reorgUndo = null; } closeSheet(); toast("Desfeito. Voltou como estava."); };
+
+/* cuidados cotidianos */
+const CARE = [
+  {id:"agua", e:"💧", n:"Hidratação", c:"c-sky", d:"Lembretes gentis para beber água", p:"tarde", time:"10:00", s:ss([["🥤","Pegue um copo ou a garrafa"],["💧","Encha com água"],["😌","Beba alguns goles, no seu ritmo"],["🎒","Deixe a garrafa por perto"]])},
+  {id:"comer", e:"🍽️", n:"Alimentação", c:"c-peach", d:"Horários flexíveis e o que você gosta", p:"tarde", time:"12:30", s:ss([["🤔","Perceba: faz tempo que você comeu?"],["🍞","Escolha algo que você gosta e tolera bem"],["🪑","Sente-se num lugar tranquilo"],["🧽","Leve a louça para a pia"]])},
+  {id:"higiene", e:"🪥", n:"Higiene", c:"c-lav", d:"Etapas visuais para banho e dentes", p:"noite", time:"20:00", s:ss([["🧴","Separe toalha e roupa"],["🚿","Ajuste a temperatura da água"],["🧼","Lave o corpo e o cabelo"],["🪥","Escove os dentes"]])},
+  {id:"sair", e:"🎒", n:"Preparar para sair", c:"c-butter", d:"Checklist do que levar", p:"manha", time:"08:00", s:ss([["🔑","Chaves"],["🪪","Documento"],["📱","Celular carregado"],["🎧","Fone ou abafador"],["💧","Garrafa de água"],["💊","Remédio, se precisar"]])},
+  {id:"pausa", e:"🛋️", n:"Descanso", c:"c-sage", d:"Planeje pausas no dia", p:"tarde", time:"15:30", s:ss([["⏸️","Pare o que está fazendo"],["🤫","Vá para um lugar mais calmo"],["🫧","Respire devagar algumas vezes"],["⏳","Descanse 10 minutos"]])},
+  {id:"dormir", e:"🌙", n:"Preparar para dormir", c:"c-rose", d:"Sequência para desacelerar", p:"noite", time:"22:00", s:ss([["💡","Diminua as luzes"],["📵","Deixe o celular longe da cama"],["🎧","Se quiser, ligue um som calmo"],["🛏️","Deite-se e respire devagar"]])}
+];
+let water = load("water", {d:"", n:0, on:false});
+A.care = el => {
+  const c = CARE.find(x => x.id === el.dataset.id), today = new Date().toDateString(); if(water.d !== today){ water.d = today; water.n = 0; }
+  const inDay = acts.some(a => a.careId === c.id);
+  openSheet(`<div style="display:flex;gap:14px;align-items:center"><span class="pict ${c.c}" style="width:64px;height:64px;font-size:34px">${c.e}</span><div><h2>${c.n}</h2><p class="sub" style="font-size:14px">${c.d}</p></div></div>
+    <ol class="guide-list">${c.s.map(x => `<li>${x.e} ${esc(x.t)}</li>`).join("")}</ol>
+    <div class="btns"><button class="btn solid" data-a="careGo" data-id="${c.id}">▶ Fazer passo a passo</button><button class="btn" data-a="careAdd" data-id="${c.id}" ${inDay?"disabled":""}>${inDay?"Já está no seu dia":"＋ Pôr no meu dia"}</button></div>
+    ${c.id === "agua" ? `${toggleHTML("water-on", water.on, "Contar copos de água (opcional)", "Desligado, nada é registrado. Não existe meta.")}
+      ${water.on ? `<div class="between"><span>Hoje: <b>${water.n}</b> ${water.n===1?"copo":"copos"}</span><button class="btn sm" data-a="waterAdd">＋ 1 copo</button></div>` : ""}` : ""}
+    <p class="note">${IC.lock}<span>Cuidados cotidianos não são avaliação. Você pode editar as etapas depois de pôr no seu dia.</span></p>`);
+  TOGS["water-on"] = v => { water.on = v; save("water", water); A.care(el); };
+};
+A.waterAdd = () => { water.n++; save("water", water); A.care({dataset:{id:"agua"}}); };
+A.careGo = el => { const c = CARE.find(x => x.id === el.dataset.id); closeSheet(); G = {a:{n:c.n, s:c.s, st:"todo", care:true}, i:0}; renderGuide(); };
+A.careAdd = el => {
+  const c = CARE.find(x => x.id === el.dataset.id);
+  const a = {id:"a"+Date.now(), careId:c.id, p:c.p, e:c.e, n:c.n, time:c.time, st:"todo", remind:true, s:c.s.map(x => ({e:x.e, t:x.t}))};
+  let before = acts.findIndex(x => x.p === a.p && x.time && x.time > a.time); if(before < 0) before = acts.length;
+  acts.splice(before, 0, a); saveActs(); curP = a.p; closeSheet(); rerender(); toast(c.n + " entrou no seu dia, com lembrete gentil.");
+};
+
+/* modo foco */
+A.focus = el => {
+  const a = acts.find(x => x.id === el.dataset.id); stopTimer();
+  openFull(`<div class="between"><span class="stepcount">Modo foco</span><button class="btn sm ghost" data-a="closeFull">Sair do foco</button></div>
+    <div class="guide-card c-sky"><span class="big-e" aria-hidden="true">${a.e}</span><b>${esc(a.n)}</b>${a.d?`<p>${esc(a.d)}</p>`:""}</div>
+    <p class="sub" style="text-align:center">Só esta tarefa na tela. Lembretes do app ficam em silêncio, exceto os importantes. O tempo é ajuda, não meta.</p>
+    <div class="chips" style="justify-content:center">${[5,15,25].map(m => `<button class="chip" aria-pressed="false" data-a="timerStart" data-id="${m}">${m} min</button>`).join("")}</div>
+    <div class="timer-ring" id="tm-ring" style="background:conic-gradient(var(--peach-ink) 360deg, var(--line) 0)"><div id="tm-txt">--:--</div></div>
+    <p class="sub" id="tm-msg" style="text-align:center">Tempo opcional.</p>
+    ${a.s && a.s.length ? `<button class="btn block" data-a="guide" data-id="${a.id}">▶ Fazer passo a passo</button>` : ""}
+    <button class="btn solid block" data-a="focusDone" data-id="${a.id}">Concluir</button>`);
+};
+A.focusDone = el => { const a = acts.find(x => x.id === el.dataset.id); a.st = "done"; saveActs(); closeFull(); rerender(); toast(a.n + ": feito."); };
+
+/* =========================================================
+   COMUNICAÇÃO: painéis por contexto e limites rápidos
+   ========================================================= */
+const DEFAULT_PANELS = [
+  {id:"consulta", e:"🏥", n:"Consulta", ids:["p1","p3","p7","s7","d6","e2","p4","s5"]},
+  {id:"univ", e:"🏫", n:"Universidade", ids:["p2","p3","s7","p4","p5","d1","s5","s4"]},
+  {id:"transp", e:"🚌", n:"Transporte", ids:["d5","d1","p5","p6","b9","e6","l1","s5"]},
+  {id:"rest", e:"🍽️", n:"Restaurante", ids:["b4","b5","b6","b8","p3","s2","s3","s4"]}
+];
+let panels = load("panels", DEFAULT_PANELS);
+const savePanels = () => save("panels", panels);
+A.panelEdit = el => {
+  const p = panels.find(x => x.id === el.dataset.id);
+  openSheet(`<h2>${p.e} Painel ${esc(p.n)}</h2><p class="sub">Toque para escolher os cards que aparecem neste painel. Os 6 primeiros ficam sempre à vista.</p>
+    <div class="chips" id="pn-pick">${allCards().map(c => `<button class="chip" aria-pressed="${p.ids.includes(c.id)}" data-a="pnTog" data-id="${c.id}">${c.img?"🖼️":c.e} ${esc(c.t)}</button>`).join("")}</div>
+    <div class="btns"><button class="btn warn" data-a="panelDel" data-id="${p.id}">Apagar painel</button><button class="btn solid" data-a="panelSave" data-id="${p.id}">Salvar</button></div>`);
+};
+A.pnTog = el => el.setAttribute("aria-pressed", el.getAttribute("aria-pressed") !== "true");
+A.panelSave = el => {
+  const p = panels.find(x => x.id === el.dataset.id), sel = Array.from(document.querySelectorAll("#pn-pick [aria-pressed='true']")).map(b => b.dataset.id);
+  p.ids = p.ids.filter(id => sel.includes(id)).concat(sel.filter(id => !p.ids.includes(id))); savePanels(); closeSheet(); rerender(); toast("Painel salvo.");
+};
+A.panelDel = el => {
+  if(el.dataset.confirm !== "1"){ el.dataset.confirm = "1"; el.textContent = "Toque de novo para apagar"; return; }
+  panels = panels.filter(x => x.id !== el.dataset.id); savePanels(); curCat = "fav"; closeSheet(); rerender(); toast("Painel apagado. Os cards continuam salvos.");
+};
+A.panelNew = () => openSheet(`<h2>Novo painel</h2><p class="sub">Um conjunto de cards para um lugar ou situação.</p>
+  <div class="field"><label for="pn-n">Nome</label><input id="pn-n" maxlength="24" placeholder="Ex.: Trabalho"></div>
+  <div class="field"><span class="flabel">Imagem</span>${pickerHTML("pn-e","💻")}</div>
+  <p class="err" id="pn-err" hidden></p>
+  <div class="btns"><button class="btn ghost" data-a="closeSheet">Cancelar</button><button class="btn solid" data-a="panelCreate">Criar e escolher cards</button></div>`);
+A.panelCreate = () => {
+  const n = $("#pn-n").value.trim(); if(!n){ const e = $("#pn-err"); e.textContent = "Dê um nome para o painel."; e.hidden = false; return; }
+  const p = {id:"pn"+Date.now(), e:picked("pn-e","💻"), n, ids:[]}; panels.push(p); savePanels(); curCat = "pn:"+p.id; rerender(); A.panelEdit({dataset:{id:p.id}});
+};
+const LIMITS = [["⏸️","Preciso de uma pausa."],["🙅","Por favor, não me toque."],["🤫","Preciso de silêncio agora."],["🕐","Falo com você depois."],["🚪","Preciso sair daqui um pouco."],["✍️","Prefiro conversar por escrito."]];
+A.limits = () => openSheet(`<h2>Limites rápidos</h2><p class="sub">Toque para mostrar em tela cheia. Nada é enviado a ninguém.</p>
+  <div class="list">${LIMITS.map((l,i) => `<button class="setting" data-a="limitShow" data-id="${i}"><span class="ic c-lav">${l[0]}</span><span class="t"><b>${l[1]}</b></span>›</button>`).join("")}</div>
+  <button class="btn ghost block" data-a="closeSheet">Fechar</button>`);
+A.limitShow = el => { const l = LIMITS[+el.dataset.id]; closeSheet(); showSentence([{e:l[0], t:l[1], say:l[1]}]); };
+
+/* =========================================================
+   MEU ESPAÇO: escrita livre e Meu manual pessoal
+   ========================================================= */
+A.quickEntry = () => {
+  openSheet(`<h2>Escrever ou falar</h2><p class="sub">Um registro livre, sem perguntas. Fica só para você.</p>
+    <div class="field"><label for="cap-t">O que você quer registrar?</label><textarea id="cap-t" style="min-height:140px"></textarea></div>
+    <p class="err" id="cap-err" hidden></p>
+    <div class="btns"><button class="btn ghost" data-a="capVoice" id="cap-mic">🎙️ Falar</button><button class="btn solid" data-a="quickSave">Salvar</button></div>`, () => { if(rec){ try{ rec.stop(); }catch(e){} rec = null; } });
+};
+A.quickSave = () => {
+  const t = $("#cap-t").value.trim(); if(!t){ const e = $("#cap-err"); e.textContent = "Escreva ou fale alguma coisa antes de salvar."; e.hidden = false; return; }
+  diary.push({id:"d"+Date.now(), date:new Date().toISOString(), emo:[], lvl:0, stim:[], text:t, strat:[], share:false}); saveDiary(); closeSheet(); rerender(); toast("Salvo só para você.");
+};
+const MANUAL = [
+  ["com","💬","Como eu me comunico","Ex.: Às vezes prefiro escrever. Se eu demorar para responder, não é falta de interesse."],
+  ["ajuda","🌿","O que me ajuda","Ex.: Avisar mudanças com antecedência. Instruções por escrito."],
+  ["sobre","🌀","O que me sobrecarrega","Ex.: Lugares cheios, várias pessoas falando ao mesmo tempo, luz forte."],
+  ["sens","🎧","Minhas preferências sensoriais","Ex.: Uso abafador. Prefiro luz baixa e roupas sem etiqueta."],
+  ["dificil","🫶","Se eu estiver em um momento difícil","Ex.: Fale pouco e devagar. Me deixe ir para um lugar calmo."],
+  ["evitar","🚫","O que evitar","Ex.: Toque sem avisar. Insistir para eu olhar nos olhos."]
+];
+let manual = load("manual", {});
+A.manualEdit = () => openSheet(`<h2>📘 Meu manual pessoal</h2><p class="sub">Todas as partes são opcionais. Escreva do seu jeito.</p>
+  ${MANUAL.map(m => `<div class="field"><label for="mn-${m[0]}">${m[1]} ${m[2]}</label><textarea id="mn-${m[0]}" placeholder="${esc(m[3])}">${esc(manual[m[0]]||"")}</textarea></div>`).join("")}
+  <div class="btns"><button class="btn ghost" data-a="closeSheet">Cancelar</button><button class="btn solid" data-a="manualSave">Salvar</button></div>`);
+A.manualSave = () => { MANUAL.forEach(m => manual[m[0]] = $("#mn-"+m[0]).value.trim()); save("manual", manual); closeSheet(); rerender(); toast("Manual salvo."); };
+A.manualShow = () => {
+  closeSheet(); const filled = MANUAL.filter(m => (manual[m[0]]||"").trim());
+  openFull(`<div class="between"><h2>📘 ${S.profile.name ? "Manual de "+esc(S.profile.name) : "Meu manual pessoal"}</h2><button class="btn ghost" data-a="closeFull">Fechar</button></div>
+    ${filled.length ? filled.map(m => `<div class="manual-sec"><b>${m[1]} ${m[2]}</b><p>${esc(manual[m[0]])}</p></div>`).join("")
+      : `<p class="empty">Seu manual ainda está vazio. Toque em Editar para escrever a primeira parte.</p>`}
+    <div class="btns"><button class="btn" data-a="manualExport">Exportar PDF</button><button class="btn" data-a="manualShare">Compartilhar</button></div>
+    <button class="btn ghost block" data-a="manualEditFull">Editar</button>`);
+};
+A.manualEditFull = () => { closeFull(); A.manualEdit(); };
+A.manualExport = () => toast("Na versão final, você vê uma prévia e escolhe as partes antes de gerar o PDF.");
+A.manualShare = () => toast("Na versão final, você escolhe com quem compartilhar e pode cancelar o acesso quando quiser.");
+
+/* =========================================================
+   AUTORREGULAÇÃO: Meu Plano de Apoio, estratégias, baixa estimulação
+   ========================================================= */
+const RES = {
+  none:"Sem recurso", sons:"Abrir sons calmos", low:"Ligar baixa estimulação", cards:"Abrir cards de comunicação", pausa:"Mostrar aviso de pausa",
+  limites:"Abrir limites rápidos", manual:"Abrir meu manual", respirar:"Respirar agora", ground:"Fazer o 5-4-3-2-1"
+};
+const DEFAULT_PLANS = [
+  {id:"pl1", e:"🏫", n:"Universidade", main:true, msg:"Você já passou por isso antes. Vai passar.", rows:[
+    {s:"Ambiente muito barulhento", t:"Colocar os abafadores e sentar perto da porta.", r:"sons"},
+    {s:"Excesso de estímulos", t:"Ir para a biblioteca ou outro lugar mais tranquilo.", r:"low"},
+    {s:"Dificuldade de falar", t:"Usar os cards do painel Universidade.", r:"cards"},
+    {s:"Necessidade de pausa", t:"Mostrar o aviso de pausa e sair por 10 minutos.", r:"pausa"},
+    {s:"Dificuldade de organizar pensamentos", t:"Ler minhas instruções no manual pessoal.", r:"manual"},
+    {s:"Sobrecarga", t:"Respirar devagar e usar minhas estratégias favoritas.", r:"respirar"}]},
+  {id:"pl2", e:"🚌", n:"Transporte", main:false, msg:"Uma parada de cada vez.", rows:[
+    {s:"Ônibus lotado", t:"Esperar o próximo, se der tempo.", r:"none"},
+    {s:"Alguém encostando", t:"Mostrar o aviso de não me toque.", r:"limites"},
+    {s:"Barulho e conversa", t:"Ligar o ruído marrom no fone.", r:"sons"}]}
+];
+let plans = load("plans", DEFAULT_PLANS);
+const savePlans = () => save("plans", plans);
+let strats = load("strats", STRAT.slice(0, 8));
+let lowBefore = null;
+function setLow(v){ S.prefs.low = v; persist(); applyPrefs(); }
+A.lowOn = () => { closeSheet(); setLow(true); rerender(); toast("Baixa estimulação ligada."); };
+A.lowOff = () => { setLow(false); rerender(); toast("Baixa estimulação desligada."); };
+TOGS.low = v => { setLow(v); rerender(); };
+
+function renderAut(){
+  $("#view").innerHTML = `<section class="screen">
+    <a class="back" href="#inicio">← Início</a>
+    <div class="head"><h1>Autorregulação</h1><p class="sub">Prepare com calma o que ajuda nos momentos difíceis. O app não tenta adivinhar como você está: você abre quando quiser.</p></div>
+    ${toggleHTML("low", S.prefs.low, "Modo de baixa estimulação", "Menos cor e nenhuma animação, em todo o app")}
+    <div class="section"><div class="between"><h2 class="label">Meus planos de apoio</h2><button class="btn sm ghost" data-a="planEdit">＋ Novo plano</button></div>
+      ${plans.length ? `<div class="list">${plans.map(p => `<div class="setting"><button class="t" data-a="planUse" data-id="${p.id}" style="text-align:left;flex-direction:row;align-items:center;gap:14px"><span class="ic c-rose">${p.e}</span><span style="display:flex;flex-direction:column;min-width:0"><b>${esc(p.n)}</b><small>${p.main?"Principal · ":""}${p.rows.length} ${p.rows.length===1?"situação":"situações"}</small></span></button><button class="btn sm ghost" data-a="planEdit" data-id="${p.id}">Editar</button></div>`).join("")}</div>`
+        : `<p class="empty">Crie um plano para um lugar ou situação, como universidade, trabalho ou transporte.</p>`}</div>
+    <div class="section"><h2 class="label">Para agora</h2><div class="quick3">
+      <button class="c-sky" data-a="breath"><span class="big" aria-hidden="true">🫧</span>Respirar</button>
+      <button class="c-sage" data-a="ground"><span class="big" aria-hidden="true">🖐️</span>5-4-3-2-1</button>
+      ${S.modules.bem ? `<button class="c-lav" data-a="go" data-id="bem-estar"><span class="big" aria-hidden="true">🎧</span>Sons calmos</button>` : `<button class="c-lav" data-a="limits"><span class="big" aria-hidden="true">✋</span>Limites</button>`}
+    </div></div>
+    <div class="section"><div class="between"><h2 class="label">Minhas estratégias</h2><button class="btn sm ghost" data-a="stratNew">＋ Adicionar</button></div>
+      <p class="sub" style="font-size:14px">O que costuma funcionar para você. Elas aparecem para escolher no plano e no registro guiado.</p>
+      <div class="chips">${strats.map((x,i) => `<button class="chip" data-a="stratDel" data-id="${i}" aria-label="${esc(x)}. Toque para remover">${esc(x)} ✕</button>`).join("")}</div></div>
+    <p class="note">${IC.lock}<span>Planos e estratégias ficam só neste aparelho. Nenhum contato é acionado sem você tocar.</span></p>
+  </section>`;
+}
+A.stratNew = () => openSheet(`<h2>Nova estratégia</h2><div class="field"><label for="st-n">O que ajuda você?</label><input id="st-n" maxlength="40" placeholder="Ex.: Segurar meu chaveiro de pelúcia"></div>
+  <div class="btns"><button class="btn ghost" data-a="closeSheet">Cancelar</button><button class="btn solid" data-a="stratSave">Adicionar</button></div>`);
+A.stratSave = () => { const v = $("#st-n").value.trim(); if(!v) return closeSheet(); strats.push("✨ " + v); save("strats", strats); closeSheet(); rerender(); toast("Estratégia adicionada."); };
+A.stratDel = el => { const i = +el.dataset.id, x = strats[i]; if(el.dataset.confirm !== "1"){ el.dataset.confirm = "1"; el.textContent = "Remover? Toque de novo"; return; } strats.splice(i,1); save("strats", strats); rerender(); toast(x + " removida."); };
+
+A.planMain = () => { closeSheet(); const p = plans.find(x => x.main) || plans[0]; if(!p){ location.hash = "autorregulacao"; return toast("Crie seu primeiro plano de apoio."); } A.planUse({dataset:{id:p.id}}); };
+A.planUse = el => {
+  const p = plans.find(x => x.id === el.dataset.id); closeSheet();
+  if(lowBefore === null){ lowBefore = S.prefs.low; document.documentElement.setAttribute("data-low",""); }
+  openFull(`<div class="between"><span class="stepcount">${p.e} Plano ${esc(p.n)}</span><button class="btn sm ghost" data-a="closeFull">Fechar</button></div>
+    ${p.msg ? `<p class="plan-big c-rose" style="font-size:18px">${esc(p.msg)}</p>` : ""}
+    <h2>O que está acontecendo?</h2>
+    <div class="plan-sit">${p.rows.map((r,i) => `<button data-a="planSit" data-id="${p.id}" data-k="${i}">${esc(r.s)}</button>`).join("")}</div>
+    ${plans.length > 1 ? `<div class="chips">${plans.filter(x => x.id !== p.id).map(x => `<button class="chip" data-a="planUse" data-id="${x.id}">${x.e} ${esc(x.n)}</button>`).join("")}</div>` : ""}`, restoreLow);
+};
+function restoreLow(){ if(lowBefore !== null){ if(!lowBefore) document.documentElement.removeAttribute("data-low"); lowBefore = null; } }
+A.planSit = el => {
+  const p = plans.find(x => x.id === el.dataset.id), r = p.rows[+el.dataset.k];
+  const keep = fullClose; fullClose = null;
+  openFull(`<div class="between"><button class="btn sm ghost" data-a="planUse" data-id="${p.id}">← Situações</button><button class="btn sm ghost" data-a="closeFull">Fechar</button></div>
+    <span class="stepcount">${esc(r.s)}</span>
+    <div class="plan-big c-sage"><b>${esc(r.t)}</b></div>
+    <button class="btn ghost block" data-a="say" data-id="${esc(r.t)}">${IC.speak}Ouvir</button>
+    ${r.r && r.r !== "none" ? `<button class="btn solid block" data-a="planRes" data-id="${r.r}" data-p="${p.id}">${RES[r.r]}</button>` : ""}`, keep);
+};
+A.planRes = el => {
+  const r = el.dataset.id, pid = el.dataset.p; closeFull();
+  if(r === "sons") location.hash = "bem-estar";
+  if(r === "low"){ setLow(true); rerender(); toast("Baixa estimulação ligada."); }
+  if(r === "cards"){ const pn = panels.find(x => x.id === (pid === "pl1" ? "univ" : pid === "pl2" ? "transp" : "")); curCat = pn ? "pn:"+pn.id : "fav"; location.hash = "comunicacao"; if(current === "comunicacao") rerender(); }
+  if(r === "pausa") showSentence([{e:"⏸️", t:"Preciso de uma pausa. Volto em alguns minutos.", say:"Preciso de uma pausa. Volto em alguns minutos."}]);
+  if(r === "limites") A.limits();
+  if(r === "manual") A.manualShow();
+  if(r === "respirar") A.breath();
+  if(r === "ground") A.ground();
+};
+let PE = null;
+A.planEdit = el => {
+  const src = el && el.dataset && el.dataset.id ? plans.find(x => x.id === el.dataset.id) : null;
+  PE = src ? JSON.parse(JSON.stringify(src)) : {id:"pl"+Date.now(), e:"🏠", n:"", main:!plans.length, msg:"", rows:[{s:"", t:"", r:"none"}], isNew:true};
+  renderPE();
+};
+function peCollect(){
+  const n = $("#pe-n"); if(!n) return; PE.n = n.value.trim(); PE.msg = $("#pe-msg").value.trim(); PE.e = picked("pe-e", PE.e); PE.main = isOn("pe-main");
+  PE.rows = PE.rows.map((r,i) => ({s:$("#pe-s"+i).value.trim(), t:$("#pe-t"+i).value.trim(), r:$("#pe-r"+i).value}));
+}
+function renderPE(){
+  openSheet(`<h2>${PE.isNew ? "Novo plano de apoio" : "Editar plano"}</h2><p class="sub">Para cada situação difícil, escreva o que ajuda e, se quiser, ligue um recurso do app.</p>
+    <div class="field"><label for="pe-n">Para onde ou quando é este plano?</label><input id="pe-n" maxlength="30" value="${esc(PE.n)}" placeholder="Ex.: Trabalho, consultas, festas"></div>
+    <div class="field"><span class="flabel">Imagem</span>${pickerHTML("pe-e", PE.e)}</div>
+    <div class="field"><label for="pe-msg">Uma mensagem para você mesmo(a/e) (opcional)</label><input id="pe-msg" maxlength="80" value="${esc(PE.msg)}" placeholder="Ex.: Vai passar. Você sabe o que fazer."></div>
+    ${toggleHTML("pe-main", PE.main, "Plano principal", "Abre direto pelo atalho Meu plano de apoio")}
+    ${PE.rows.map((r,i) => `<div class="row-edit"><span class="stepcount">Situação ${i+1}</span>
+      <div class="field"><label for="pe-s${i}">Quando…</label><input id="pe-s${i}" maxlength="50" value="${esc(r.s)}" placeholder="Ex.: Muito barulho"></div>
+      <div class="field"><label for="pe-t${i}">O que me ajuda</label><input id="pe-t${i}" maxlength="100" value="${esc(r.t)}" placeholder="Ex.: Colocar o abafador" list="pe-strats"></div>
+      <div class="field"><label for="pe-r${i}">Recurso do app</label><select id="pe-r${i}">${Object.entries(RES).map(([k,v]) => `<option value="${k}" ${r.r===k?"selected":""}>${v}</option>`).join("")}</select></div>
+      ${PE.rows.length > 1 ? `<button class="btn sm ghost" data-a="peDelRow" data-id="${i}">Remover situação</button>` : ""}</div>`).join("")}
+    <datalist id="pe-strats">${strats.map(x => `<option value="${esc(x.replace(/^\S+\s/, ""))}">`).join("")}</datalist>
+    <button class="btn ghost block" data-a="peAddRow">＋ Outra situação</button>
+    <p class="err" id="pe-err" hidden></p>
+    <div class="btns">${PE.isNew ? `<button class="btn ghost" data-a="closeSheet">Cancelar</button>` : `<button class="btn warn" data-a="planDel" data-id="${PE.id}">Apagar plano</button>`}<button class="btn solid" data-a="planSave">Salvar plano</button></div>`);
+}
+A.peAddRow = () => { peCollect(); PE.rows.push({s:"", t:"", r:"none"}); renderPE(); };
+A.peDelRow = el => { peCollect(); PE.rows.splice(+el.dataset.id, 1); renderPE(); };
+A.planSave = () => {
+  peCollect(); PE.rows = PE.rows.filter(r => r.s || r.t);
+  if(!PE.n || !PE.rows.length){ const e = $("#pe-err"); e.textContent = !PE.n ? "Dê um nome para o plano." : "Preencha pelo menos uma situação."; e.hidden = false; if(!PE.rows.length) PE.rows = [{s:"", t:"", r:"none"}]; return; }
+  PE.rows.forEach(r => { if(!r.s) r.s = "Situação"; if(!r.t) r.t = "—"; });
+  const isNew = PE.isNew; delete PE.isNew;
+  if(PE.main) plans.forEach(p => p.main = false);
+  const i = plans.findIndex(p => p.id === PE.id); if(i >= 0) plans[i] = PE; else plans.push(PE);
+  if(!plans.some(p => p.main)) plans[0].main = true;
+  savePlans(); PE = null; closeSheet(); rerender(); toast(isNew ? "Plano criado." : "Plano salvo.");
+};
+A.planDel = el => {
+  if(el.dataset.confirm !== "1"){ el.dataset.confirm = "1"; el.textContent = "Toque de novo para apagar"; return; }
+  plans = plans.filter(p => p.id !== el.dataset.id); if(plans.length && !plans.some(p => p.main)) plans[0].main = true; savePlans(); PE = null; closeSheet(); rerender(); toast("Plano apagado.");
+};
+
+/* ================= início ================= */
+ROUTES = {inicio:renderHome, comunicacao:renderCom, rotina:renderRot, diario:renderDia, autorregulacao:renderAut, "bem-estar":renderBem, profissionais:renderPro, perfil:renderPerfil};
+applyPrefs();
+route();
+if(!S.profile.onboarded) renderOnb();
+else if(!S.profile.logged){ onbMode = "login"; renderOnb(); }
+})();
+</script>
+</body>
+</html>
